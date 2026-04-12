@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#0D6E6E</color>
-    <color name="primary_variant">#0A4F4F</color>
-    <color name="secondary">#E67E22</color>
+    <color name="primary">#0D5A55</color>
+    <color name="primary_variant">#0A4642</color>
+    <color name="secondary">#F28C28</color>
+
+    <color name="background">#ECEDEE</color>
+    <color name="surface">#F6F7F8</color>
+    <color name="surface_soft">#EEF0F2</color>
+    <color name="card_highlight">#0F5E5A</color>
+
+    <color name="text_primary">#111316</color>
+    <color name="text_secondary">#5F6368</color>
+    <color name="text_muted">#8A9097</color>
+
+    <color name="success">#0C9C70</color>
+    <color name="warning">#A54B00</color>
+    <color name="danger">#B3261E</color>
+
+    <color name="chip_active_bg">#DDF4EA</color>
+    <color name="chip_active_text">#0A7B58</color>
+    <color name="chip_warning_bg">#FDEAD9</color>
+    <color name="chip_warning_text">#A54B00</color>
+    <color name="chip_expired_bg">#F9DBD9</color>
+    <color name="chip_expired_text">#9D1C1C</color>
+
+    <color name="divider">#D9DDE1</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

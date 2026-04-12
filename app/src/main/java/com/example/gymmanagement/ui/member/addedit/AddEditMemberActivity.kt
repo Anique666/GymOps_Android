@@ -3,7 +3,7 @@ package com.example.gymmanagement.ui.member.addedit
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -11,10 +11,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.entity.Plan
+import com.example.gymmanagement.ui.common.BottomNavHelper
 import com.example.gymmanagement.utils.DateUtils
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.appbar.MaterialToolbar
 import java.util.Calendar
 
 class AddEditMemberActivity : AppCompatActivity() {
@@ -24,7 +27,7 @@ class AddEditMemberActivity : AppCompatActivity() {
     private lateinit var etName: TextInputEditText
     private lateinit var etPhone: TextInputEditText
     private lateinit var tvJoinDate: TextView
-    private lateinit var btnPickDate: Button
+    private lateinit var btnPickDate: ImageButton
     private lateinit var spinnerPlans: Spinner
     private lateinit var switchPaymentStatus: SwitchMaterial
     private lateinit var btnSaveMember: MaterialButton
@@ -42,12 +45,14 @@ class AddEditMemberActivity : AppCompatActivity() {
         bindViews()
         setupListeners()
         observePlans()
+        setupBottomNav()
 
         editingMemberId = intent.getIntExtra(EXTRA_MEMBER_ID, -1).takeIf { it != -1 }
         if (editingMemberId != null) {
-            title = "Edit Member"
+            findViewById<MaterialToolbar>(R.id.toolbarAddEditMember).title = getString(R.string.title_edit_member)
             observeEditingMember(editingMemberId!!)
         } else {
+            findViewById<MaterialToolbar>(R.id.toolbarAddEditMember).title = getString(R.string.title_add_member)
             tvJoinDate.text = DateUtils.formatDate(joinDateMillis)
         }
     }
@@ -60,6 +65,7 @@ class AddEditMemberActivity : AppCompatActivity() {
         spinnerPlans = findViewById(R.id.spinnerPlans)
         switchPaymentStatus = findViewById(R.id.switchPaymentStatus)
         btnSaveMember = findViewById(R.id.btnSaveMember)
+        findViewById<MaterialToolbar>(R.id.toolbarAddEditMember).setNavigationOnClickListener { finish() }
     }
 
     private fun setupListeners() {
@@ -95,7 +101,7 @@ class AddEditMemberActivity : AppCompatActivity() {
         viewModel.getAllPlans().observe(this) { planList ->
             plans = planList
             val names = if (planList.isEmpty()) {
-                listOf("No plans available")
+                listOf(getString(R.string.hint_select_plan))
             } else {
                 planList.map { "${it.name} (${it.durationDays} days)" }
             }
@@ -136,17 +142,17 @@ class AddEditMemberActivity : AppCompatActivity() {
         val phone = etPhone.text?.toString()?.trim().orEmpty()
 
         if (name.isBlank()) {
-            etName.error = "Name is required"
+            etName.error = getString(R.string.error_name_required)
             return
         }
 
         if (phone.isBlank()) {
-            etPhone.error = "Phone is required"
+            etPhone.error = getString(R.string.error_phone_required)
             return
         }
 
         if (plans.isEmpty()) {
-            Toast.makeText(this, "Please create a plan first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.msg_no_plans_available), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -163,6 +169,11 @@ class AddEditMemberActivity : AppCompatActivity() {
         )
 
         finish()
+    }
+
+    private fun setupBottomNav() {
+        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
+        BottomNavHelper.setup(bottomNav, R.id.navMembers, this)
     }
 
     companion object {

@@ -18,6 +18,11 @@ object DateUtils {
         return formatter.format(Date(timestamp))
     }
 
+    fun formatCardDate(timestamp: Long): String {
+        val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        return formatter.format(Date(timestamp))
+    }
+
     fun todayStartMillis(): Long {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 0)

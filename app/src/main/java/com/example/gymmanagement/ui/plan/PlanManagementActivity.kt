@@ -3,6 +3,7 @@ package com.example.gymmanagement.ui.plan
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.entity.Plan
+import com.example.gymmanagement.ui.common.BottomNavHelper
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PlanManagementActivity : AppCompatActivity() {
@@ -23,15 +26,28 @@ class PlanManagementActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_management)
 
+        setupBottomNav()
         setupRecyclerView()
 
         findViewById<FloatingActionButton>(R.id.fabAddPlan).setOnClickListener {
             showPlanDialog()
         }
 
+        findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardCreateCustomPlan).setOnClickListener {
+            showPlanDialog()
+        }
+
+        val tvActivePlansCount: TextView = findViewById(R.id.tvActivePlansCount)
+
         viewModel.plans.observe(this) { plans ->
             adapter.submitList(plans)
+            tvActivePlansCount.text = plans.size.toString().padStart(2, '0')
         }
+    }
+
+    private fun setupBottomNav() {
+        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
+        BottomNavHelper.setup(bottomNav, R.id.navPlans, this)
     }
 
     private fun setupRecyclerView() {
@@ -58,10 +74,10 @@ class PlanManagementActivity : AppCompatActivity() {
         }
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle(if (existingPlan == null) "Add Plan" else "Edit Plan")
+            .setTitle(if (existingPlan == null) getString(R.string.dialog_add_plan) else getString(R.string.dialog_edit_plan))
             .setView(view)
-            .setPositiveButton("Save", null)
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton(getString(R.string.dialog_save), null)
+            .setNegativeButton(getString(R.string.dialog_cancel), null)
             .show()
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -71,20 +87,20 @@ class PlanManagementActivity : AppCompatActivity() {
 
             var hasError = false
             if (name.isBlank()) {
-                etPlanName.error = "Name required"
+                etPlanName.error = getString(R.string.error_plan_name_required)
                 hasError = true
             }
             if (duration <= 0) {
-                etDuration.error = "Duration must be > 0"
+                etDuration.error = getString(R.string.error_plan_duration_invalid)
                 hasError = true
             }
             if (price <= 0.0) {
-                etPrice.error = "Price must be > 0"
+                etPrice.error = getString(R.string.error_plan_price_invalid)
                 hasError = true
             }
 
             if (hasError) {
-                Toast.makeText(this, "Please enter valid plan details", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.toast_valid_plan_details), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

@@ -1,4 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gym Management System</string>
+    <string name="app_name">Premium Gym</string>
+
+    <string name="dashboard_title">Operations Center</string>
+    <string name="dashboard_subtitle">Experience precision management. Your facility\'s pulse, refined for growth and peak member engagement.</string>
+    <string name="label_total_members">Total Members</string>
+    <string name="label_active_members">Active Members</string>
+    <string name="label_expired_members">Expired Members</string>
+    <string name="label_expiring_soon">Expiring in 5 Days</string>
+    <string name="label_primary_management">Primary Management</string>
+    <string name="label_occupancy_trends">Occupancy Trends</string>
+    <string name="label_recent_checkins">Recent Check-ins</string>
+    <string name="action_view_all">View All</string>
+    <string name="action_manage_members">Manage Members</string>
+    <string name="action_manage_plans">Manage Plans</string>
+    <string name="action_quick_add_member">Quick Add Member</string>
+    <string name="label_morning_rush">Morning Rush</string>
+    <string name="label_evening_peak">Evening Peak</string>
+    <string name="occupancy_morning_value">88%% Capacity</string>
+    <string name="occupancy_evening_value">94%% Capacity</string>
+    <string name="label_realtime">Real-time</string>
+    <string name="label_percent_up">+12%%</string>
+    <string name="label_active_status">Active</string>
+    <string name="label_expired_status">Expired</string>
+    <string name="label_warning_status">Warning</string>
+    <string name="placeholder_checked_in_now">Checked in just now</string>
+    <string name="placeholder_checked_in_recently">Checked in recently</string>
+
+    <string name="members_directory">Members Directory</string>
+    <string name="hint_search_member">Search by name or phone</string>
+    <string name="label_total_members_upper">TOTAL MEMBERS</string>
+    <string name="label_active_now_upper">ACTIVE NOW</string>
+    <string name="label_expiring_soon_upper">EXPIRING SOON</string>
+    <string name="label_expiry_date_upper">EXPIRY DATE</string>
+    <string name="action_view_details">View Details</string>
+    <string name="action_renew_now">Renew Now</string>
+
+    <string name="member_details_title">Member Details</string>
+    <string name="member_details_subtitle">Fill in the information to register or update a member\'s profile.</string>
+    <string name="label_name_upper">NAME</string>
+    <string name="label_phone_upper">PHONE</string>
+    <string name="label_join_date_upper">JOIN DATE</string>
+    <string name="label_plan_upper">PLAN</string>
+    <string name="hint_name">e.g. Julian Newman</string>
+    <string name="hint_phone">+1 (555) 000-0000</string>
+    <string name="hint_join_date">mm/dd/yyyy</string>
+    <string name="hint_select_plan">Select a Membership Plan</string>
+    <string name="label_payment_completed">Payment Completed</string>
+    <string name="label_payment_completed_subtitle">Verify if the initial dues have been processed.</string>
+    <string name="action_save_member">Save Member</string>
+    <string name="label_pro_tip">PRO TIP</string>
+    <string name="premium_onboarding_title">Premium Onboarding</string>
+    <string name="premium_onboarding_subtitle">Adding a photo and setting the correct join date ensures accurate progress tracking and automated renewal notifications.</string>
+    <string name="label_available_tiers">AVAILABLE TIERS</string>
+    <string name="tier_standard">Standard</string>
+    <string name="tier_elite">Elite</string>
+    <string name="tier_vip">VIP</string>
+    <string name="tier_standard_price">$49</string>
+    <string name="tier_elite_price">$89</string>
+    <string name="tier_vip_price">$149</string>
+    <string name="msg_no_plans_available">Please create a plan first</string>
+    <string name="title_add_member">Add Member</string>
+    <string name="title_edit_member">Edit Member</string>
+
+    <string name="member_profile_title">Member Profile</string>
+    <string name="label_membership_status_upper">MEMBERSHIP STATUS</string>
+    <string name="label_payment_status_upper">PAYMENT STATUS</string>
+    <string name="label_join_date">Join Date</string>
+    <string name="label_expiry_date">Expiry Date</string>
+    <string name="label_weekly_checkins">Weekly Check-ins</string>
+    <string name="label_placeholder_plan_subtitle">Premium Performance Plan</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_delete_member">Delete Member</string>
+    <string name="dialog_delete_member_title">Delete Member</string>
+    <string name="dialog_delete_member_message">Are you sure you want to delete this member?</string>
+    <string name="label_paid">Paid</string>
+    <string name="label_pending">Pending</string>
+    <string name="label_last_billing">Last billing: %1$s</string>
+    <string name="label_status_value">%1$s</string>
+    <string name="label_member_tier">Elite Member</string>
+
+    <string name="plans_management_title">Membership Plans</string>
+    <string name="plans_management_subtitle">Curate your club\'s offerings. Balance premium value with athletic discipline.</string>
+    <string name="label_management_upper">MANAGEMENT</string>
+    <string name="label_active_plans_count">%1$d</string>
+    <string name="label_active_plans_upper">ACTIVE PLANS</string>
+    <string name="label_per_days">/ %1$d DAYS</string>
+    <string name="label_popular_choice">POPULAR CHOICE</string>
+    <string name="label_value_tier">VALUE TIER</string>
+    <string name="label_save_percent">Save 15%%</string>
+    <string name="label_vip_status">VIP STATUS</string>
+    <string name="label_best_deal">Best Deal</string>
+    <string name="plan_subtitle_standard">Standard Individual Access</string>
+    <string name="plan_subtitle_results">Results-Driven Commitment</string>
+    <string name="plan_subtitle_lifestyle">Lifestyle Transformation</string>
+    <string name="action_create_custom_plan">Create Custom Plan</string>
+    <string name="create_custom_plan_subtitle">Define your own duration and pricing structure.</string>
+
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_members">Members</string>
+    <string name="nav_plans">Plans</string>
+    <string name="nav_reports">Reports</string>
+
+    <string name="a11y_open_notifications">Open notifications</string>
+    <string name="a11y_profile_avatar">Open profile</string>
+    <string name="a11y_add_member">Add member</string>
+    <string name="a11y_add_plan">Add plan</string>
+    <string name="a11y_pick_join_date">Pick join date</string>
+
+    <string name="toast_reports_coming_soon">Reports are coming soon</string>
+    <string name="toast_valid_plan_details">Please enter valid plan details</string>
+    <string name="error_name_required">Name is required</string>
+    <string name="error_phone_required">Phone is required</string>
+    <string name="error_plan_name_required">Name required</string>
+    <string name="error_plan_duration_invalid">Duration must be &gt; 0</string>
+    <string name="error_plan_price_invalid">Price must be &gt; 0</string>
+
+    <string name="placeholder_member_avatar">M</string>
+    <string name="placeholder_currency">Rs. %.1f</string>
+    <string name="placeholder_joined">Joined %1$s</string>
+
+    <string name="dialog_add_plan">Add Plan</string>
+    <string name="dialog_edit_plan">Edit Plan</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="hint_plan_name">Plan name</string>
+    <string name="hint_duration_days">Duration days</string>
+    <string name="hint_price">Price</string>
+    <string name="a11y_edit_plan">Edit plan</string>
+    <string name="a11y_delete_plan">Delete plan</string>
+
+    <string name="back_to_members">Back to Members</string>
+    <string name="back">Back</string>
 </resources>
