@@ -35,6 +35,12 @@ interface MemberDao {
     @Query("SELECT COUNT(*) FROM members")
     fun getTotalMembersCount(): LiveData<Int>
 
+    @Query("SELECT COUNT(*) FROM members")
+    fun getMembersCountImmediate(): Int
+
+    @Query("SELECT EXISTS(SELECT 1 FROM members WHERE phone = :phone LIMIT 1)")
+    fun memberExistsByPhone(phone: String): Boolean
+
     @Query("SELECT COUNT(*) FROM members WHERE expiryDate >= :currentTime")
     fun getActiveMembersCount(currentTime: Long): LiveData<Int>
 

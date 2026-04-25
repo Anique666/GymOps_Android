@@ -2,10 +2,11 @@ package com.example.gymmanagement.ui.common
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.Toast
 import com.example.gymmanagement.R
 import com.example.gymmanagement.ui.dashboard.DashboardActivity
+import com.example.gymmanagement.ui.inventory.InventoryActivity
 import com.example.gymmanagement.ui.member.list.MemberListActivity
+import com.example.gymmanagement.ui.reports.ReportsActivity
 import com.example.gymmanagement.ui.plan.PlanManagementActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -14,17 +15,20 @@ object BottomNavHelper {
     fun setup(bottomNav: BottomNavigationView, currentItemId: Int, activity: Activity) {
         bottomNav.selectedItemId = currentItemId
         bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navDashboard -> navigateIfNeeded(activity, DashboardActivity::class.java, currentItemId, item.itemId)
-                R.id.navMembers -> navigateIfNeeded(activity, MemberListActivity::class.java, currentItemId, item.itemId)
-                R.id.navPlans -> navigateIfNeeded(activity, PlanManagementActivity::class.java, currentItemId, item.itemId)
-                R.id.navReports -> {
-                    Toast.makeText(activity, activity.getString(R.string.toast_reports_coming_soon), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
+            navigate(activity, currentItemId, item.itemId)
         }
+    }
+
+    fun navigate(activity: Activity, currentItemId: Int, targetItemId: Int): Boolean {
+        val destination = when (targetItemId) {
+            R.id.navDashboard -> DashboardActivity::class.java
+            R.id.navMembers -> MemberListActivity::class.java
+            R.id.navInventory -> InventoryActivity::class.java
+            R.id.navPlans -> PlanManagementActivity::class.java
+            R.id.navReports -> ReportsActivity::class.java
+            else -> return false
+        }
+        return navigateIfNeeded(activity, destination, currentItemId, targetItemId)
     }
 
     private fun navigateIfNeeded(

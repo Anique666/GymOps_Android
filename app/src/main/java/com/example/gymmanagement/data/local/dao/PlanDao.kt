@@ -24,6 +24,9 @@ interface PlanDao {
     @Query("SELECT * FROM plans ORDER BY name ASC")
     fun getAllPlans(): LiveData<List<Plan>>
 
+    @Query("SELECT * FROM plans ORDER BY id ASC")
+    fun getAllPlansImmediate(): List<Plan>
+
     @Query("SELECT * FROM plans WHERE id = :planId LIMIT 1")
     fun getPlanById(planId: Int): Plan?
 }

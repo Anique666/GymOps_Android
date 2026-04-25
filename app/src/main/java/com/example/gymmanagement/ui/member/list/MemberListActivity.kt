@@ -7,14 +7,16 @@ import android.text.TextWatcher
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymmanagement.R
+import com.example.gymmanagement.ui.common.AppBottomBar
 import com.example.gymmanagement.ui.common.BottomNavHelper
 import com.example.gymmanagement.ui.member.addedit.AddEditMemberActivity
 import com.example.gymmanagement.ui.member.detail.MemberDetailActivity
 import com.example.gymmanagement.utils.MembershipStatusHelper
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 
@@ -36,8 +38,13 @@ class MemberListActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
-        BottomNavHelper.setup(bottomNav, R.id.navMembers, this)
+        val bottomNav: ComposeView = findViewById(R.id.bottomNav)
+        bottomNav.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        bottomNav.setContent {
+            AppBottomBar(selectedItemId = R.id.navMembers) { itemId ->
+                BottomNavHelper.navigate(this@MemberListActivity, R.id.navMembers, itemId)
+            }
+        }
     }
 
     private fun setupRecyclerView() {

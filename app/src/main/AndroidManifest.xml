@@ -9,6 +9,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GymManagementSystem">
 
+        <activity android:name=".ui.inventory.InventoryActivity" />
+        <activity android:name=".ui.reports.ReportsActivity" />
         <activity android:name=".ui.plan.PlanManagementActivity" />
         <activity android:name=".ui.member.detail.MemberDetailActivity" />
         <activity android:name=".ui.member.addedit.AddEditMemberActivity" />

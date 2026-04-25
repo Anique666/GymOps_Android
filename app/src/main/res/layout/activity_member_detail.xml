@@ -7,28 +7,6 @@
     android:background="@color/background"
     tools:context=".ui.member.detail.MemberDetailActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarMemberDetail"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/top_bar_height"
-        android:background="@color/primary_variant"
-        app:navigationIcon="@android:drawable/ic_media_previous"
-        app:title="@string/member_profile_title"
-        app:titleTextColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/ivProfile"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end"
-            android:background="@drawable/bg_chip_active"
-            android:contentDescription="@string/a11y_profile_avatar"
-            android:src="@android:drawable/sym_def_app_icon" />
-    </com.google.android.material.appbar.MaterialToolbar>
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollDetail"
         android:layout_width="0dp"
@@ -107,6 +85,34 @@
                         android:textColor="@color/chip_warning_text"
                         android:textSize="12sp"
                         android:textStyle="bold" />
+
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/toolbarMemberDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:layout_marginTop="32dp"
+                        android:background="@color/background"
+                        android:elevation="0dp"
+                        app:logo="@drawable/ic_brand_logo"
+                        app:logoDescription="@string/a11y_brand_logo"
+                        app:navigationIcon="@android:drawable/ic_media_previous"
+                        app:navigationIconTint="@color/primary_variant"
+                        app:subtitle="@string/toolbar_subtitle_member_detail"
+                        app:subtitleTextColor="@color/text_secondary"
+                        app:title="@string/member_profile_title"
+                        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:titleTextColor="@color/text_primary">
+
+                        <ImageView
+                            android:id="@+id/ivProfile"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="16dp"
+                            android:contentDescription="@string/a11y_open_notifications"
+                            android:src="@android:drawable/ic_menu_preferences"
+                            app:tint="@color/primary_variant" />
+                    </com.google.android.material.appbar.MaterialToolbar>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -358,18 +364,12 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <androidx.compose.ui.platform.ComposeView
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
-        android:layout_height="@dimen/bottom_nav_height"
-        android:background="@drawable/bg_bottom_nav"
-        app:itemBackground="@drawable/bg_pill_active"
-        app:itemIconTint="@color/bottom_nav_item_tint"
-        app:itemTextColor="@color/bottom_nav_item_text"
-        app:labelVisibilityMode="labeled"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_bottom_nav" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

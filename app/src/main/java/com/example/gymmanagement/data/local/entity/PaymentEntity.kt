@@ -6,8 +6,15 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "members",
+    tableName = "payments",
     foreignKeys = [
+        ForeignKey(
+            entity = Member::class,
+            parentColumns = ["id"],
+            childColumns = ["memberId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        ),
         ForeignKey(
             entity = Plan::class,
             parentColumns = ["id"],
@@ -16,18 +23,16 @@ import androidx.room.PrimaryKey
             onUpdate = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["planId"])]
+    indices = [Index(value = ["memberId"]), Index(value = ["planId"])]
 )
-data class Member(
+data class PaymentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String,
-    val phone: String,
-    val joinDate: Long,
-    val expiryDate: Long,
+    val memberId: Int,
+    val amount: Double,
+    val paymentMethod: String,
+    val paymentDate: Long,
     val planId: Int,
-    val paymentStatus: Boolean,
-    val gender: String = "UNSPECIFIED",
-    val dateOfBirth: Long = 0L,
-    val source: String = "Unknown"
+    val isRenewal: Boolean,
+    val status: String
 )

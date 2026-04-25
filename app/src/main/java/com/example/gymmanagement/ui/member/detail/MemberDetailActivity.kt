@@ -8,14 +8,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.entity.Member
+import com.example.gymmanagement.ui.common.AppBottomBar
 import com.example.gymmanagement.ui.common.BottomNavHelper
 import com.example.gymmanagement.ui.member.addedit.AddEditMemberActivity
 import com.example.gymmanagement.utils.DateUtils
 import com.example.gymmanagement.utils.MembershipStatusHelper
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 
 class MemberDetailActivity : AppCompatActivity() {
@@ -46,8 +48,7 @@ class MemberDetailActivity : AppCompatActivity() {
         val ivPaymentState: ImageView = findViewById(R.id.ivPaymentState)
 
         findViewById<MaterialToolbar>(R.id.toolbarMemberDetail).setNavigationOnClickListener { finish() }
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
-        BottomNavHelper.setup(bottomNav, R.id.navMembers, this)
+        setupBottomNav()
 
         val btnEdit: MaterialButton = findViewById(R.id.btnEditMember)
         val btnDelete: MaterialButton = findViewById(R.id.btnDeleteMember)
@@ -97,5 +98,15 @@ class MemberDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_MEMBER_ID = "extra_member_id"
+    }
+
+    private fun setupBottomNav() {
+        val bottomNav: ComposeView = findViewById(R.id.bottomNav)
+        bottomNav.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        bottomNav.setContent {
+            AppBottomBar(selectedItemId = R.id.navMembers) { itemId ->
+                BottomNavHelper.navigate(this@MemberDetailActivity, R.id.navMembers, itemId)
+            }
+        }
     }
 }

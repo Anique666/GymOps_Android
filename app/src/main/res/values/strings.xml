@@ -4,6 +4,14 @@
 
     <string name="dashboard_title">Operations Center</string>
     <string name="dashboard_subtitle">Experience precision management. Your facility\'s pulse, refined for growth and peak member engagement.</string>
+    <string name="toolbar_title_dashboard">Dashboard</string>
+    <string name="toolbar_subtitle_dashboard">Operations overview</string>
+    <string name="toolbar_title_members">Members</string>
+    <string name="toolbar_subtitle_members">Directory and activity</string>
+    <string name="toolbar_title_plans">Plans</string>
+    <string name="toolbar_subtitle_plans">Membership strategy</string>
+    <string name="toolbar_subtitle_add_edit_member">Member onboarding</string>
+    <string name="toolbar_subtitle_member_detail">Profile analytics</string>
     <string name="label_total_members">Total Members</string>
     <string name="label_active_members">Active Members</string>
     <string name="label_expired_members">Expired Members</string>
@@ -42,10 +50,22 @@
     <string name="label_phone_upper">PHONE</string>
     <string name="label_join_date_upper">JOIN DATE</string>
     <string name="label_plan_upper">PLAN</string>
-    <string name="hint_name">e.g. Julian Newman</string>
-    <string name="hint_phone">+1 (555) 000-0000</string>
+    <string name="label_gender_upper">GENDER</string>
+    <string name="label_dob_upper">DATE OF BIRTH</string>
+    <string name="label_source_upper">SOURCE</string>
+    <string name="label_payment_method_upper">PAYMENT METHOD</string>
+    <string name="label_payment_amount_upper">PAYMENT AMOUNT</string>
+    <string name="label_payment_status_upper">PAYMENT STATUS</string>
+    <string name="hint_name">Jacked Jatin</string>
+    <string name="hint_phone">1234567890</string>
     <string name="hint_join_date">mm/dd/yyyy</string>
     <string name="hint_select_plan">Select a Membership Plan</string>
+    <string name="hint_select_gender">Select gender</string>
+    <string name="hint_date_of_birth">mm/dd/yyyy</string>
+    <string name="hint_source">Walk-in, referral, etc.</string>
+    <string name="hint_select_payment_method">Select payment method</string>
+    <string name="hint_payment_amount">0.00</string>
+    <string name="hint_select_payment_status">Select payment status</string>
     <string name="label_payment_completed">Payment Completed</string>
     <string name="label_payment_completed_subtitle">Verify if the initial dues have been processed.</string>
     <string name="action_save_member">Save Member</string>
@@ -65,7 +85,7 @@
 
     <string name="member_profile_title">Member Profile</string>
     <string name="label_membership_status_upper">MEMBERSHIP STATUS</string>
-    <string name="label_payment_status_upper">PAYMENT STATUS</string>
+    <string name="label_payment_status_detail_upper">PAYMENT STATUS</string>
     <string name="label_join_date">Join Date</string>
     <string name="label_expiry_date">Expiry Date</string>
     <string name="label_weekly_checkins">Weekly Check-ins</string>
@@ -99,13 +119,57 @@
 
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_members">Members</string>
+    <string name="nav_inventory">Inventory</string>
     <string name="nav_plans">Plans</string>
     <string name="nav_reports">Reports</string>
 
+    <string name="inventory_brand_name">Iron &amp; Ether</string>
+    <string name="inventory_label_operations">OPERATIONS</string>
+    <string name="inventory_title">Equipment Inventory</string>
+    <string name="inventory_subtitle">Managing high-performance architectural assets</string>
+    <string name="inventory_total_assets">Total Assets</string>
+    <string name="inventory_under_maintenance">Under Maintenance</string>
+    <string name="inventory_ready_status">Ready Status</string>
+    <string name="inventory_total_assets_note">Tracked across all zones</string>
+    <string name="inventory_under_maintenance_note">Needs service attention</string>
+    <string name="inventory_ready_status_note">Above system average</string>
+    <string name="inventory_search_hint">Search by asset name or serial number</string>
+    <string name="inventory_filter">Filters</string>
+    <string name="inventory_filter_all">All Statuses</string>
+    <string name="inventory_empty_state">No equipment found for the current search/filter.</string>
+    <string name="inventory_serial_and_category">Serial: %1$s • %2$s</string>
+    <string name="inventory_estimated_finish">Est. Finish</string>
+    <string name="inventory_last_service">Last Service</string>
+    <string name="inventory_usage_hours">%1$d hrs</string>
+    <string name="inventory_status_active">Active</string>
+    <string name="inventory_status_in_repair">In Repair</string>
+    <string name="inventory_status_maintenance_due">Maintenance Due</string>
+    <string name="inventory_action_inspect">Inspect</string>
+    <string name="inventory_action_view_ticket">View Ticket</string>
+    <string name="inventory_action_maintenance">Maintenance</string>
+    <string name="inventory_add_equipment_title">Add Equipment</string>
+    <string name="inventory_equipment_name">Equipment Name</string>
+    <string name="inventory_serial_number">Serial Number</string>
+    <string name="inventory_category">Category</string>
+    <string name="inventory_purchase_date">Purchase Date</string>
+    <string name="inventory_pick_purchase_date">Select purchase date</string>
+    <string name="inventory_status">Status</string>
+    <string name="inventory_notes_optional">Notes (optional)</string>
+    <string name="inventory_error_name_required">Equipment name is required</string>
+    <string name="inventory_error_serial_required">Serial number is required</string>
+    <string name="inventory_error_category_required">Category is required</string>
+    <string name="inventory_error_purchase_date_required">Purchase date is required</string>
+
     <string name="a11y_open_notifications">Open notifications</string>
+    <string name="a11y_brand_logo">Brand logo</string>
     <string name="a11y_profile_avatar">Open profile</string>
     <string name="a11y_add_member">Add member</string>
     <string name="a11y_add_plan">Add plan</string>
+    <string name="a11y_add_equipment">Add equipment</string>
+    <string name="a11y_open_navigation">Open navigation</string>
+    <string name="a11y_search_equipment">Search equipment</string>
+    <string name="a11y_filter_equipment">Open equipment filters</string>
+    <string name="a11y_equipment_overflow">Open equipment actions</string>
     <string name="a11y_pick_join_date">Pick join date</string>
 
     <string name="toast_reports_coming_soon">Reports are coming soon</string>

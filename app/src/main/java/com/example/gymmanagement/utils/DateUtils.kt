@@ -13,6 +13,18 @@ object DateUtils {
         return joinDate + (durationDays * ONE_DAY_MILLIS)
     }
 
+    fun calculateAge(dateOfBirth: Long, now: Long = System.currentTimeMillis()): Int {
+        if (dateOfBirth <= 0L) return 0
+
+        val birth = Calendar.getInstance().apply { timeInMillis = dateOfBirth }
+        val current = Calendar.getInstance().apply { timeInMillis = now }
+        var age = current.get(Calendar.YEAR) - birth.get(Calendar.YEAR)
+        if (current.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
+            age -= 1
+        }
+        return age.coerceAtLeast(0)
+    }
+
     fun formatDate(timestamp: Long): String {
         val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         return formatter.format(Date(timestamp))

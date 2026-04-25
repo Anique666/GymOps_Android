@@ -6,15 +6,17 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymmanagement.R
+import com.example.gymmanagement.ui.common.AppBottomBar
 import com.example.gymmanagement.ui.common.BottomNavHelper
 import com.example.gymmanagement.ui.member.addedit.AddEditMemberActivity
 import com.example.gymmanagement.ui.member.detail.MemberDetailActivity
 import com.example.gymmanagement.ui.member.list.MemberListActivity
 import com.example.gymmanagement.ui.plan.PlanManagementActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -35,7 +37,6 @@ class DashboardActivity : AppCompatActivity() {
         val btnManagePlans: View = findViewById(R.id.btnManagePlans)
         val btnQuickAddMember: View = findViewById(R.id.btnQuickAddMember)
         val tvViewAll: TextView = findViewById(R.id.tvViewAll)
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
         val rvRecentCheckins: RecyclerView = findViewById(R.id.rvRecentCheckins)
 
         recentAdapter = RecentCheckInAdapter { member ->
@@ -46,7 +47,7 @@ class DashboardActivity : AppCompatActivity() {
         rvRecentCheckins.layoutManager = LinearLayoutManager(this)
         rvRecentCheckins.adapter = recentAdapter
 
-        BottomNavHelper.setup(bottomNav, R.id.navDashboard, this)
+        setupBottomNav()
 
         viewModel.totalMembers.observe(this) { tvTotal.text = it.toString() }
         viewModel.activeMembers.observe(this) { tvActive.text = it.toString() }
@@ -81,5 +82,15 @@ class DashboardActivity : AppCompatActivity() {
         super.onResume()
         // Refreshes time-sensitive dashboard counts (active/expired/expiring soon).
         viewModel.refreshDashboard()
+    }
+
+    private fun setupBottomNav() {
+        val bottomNav: ComposeView = findViewById(R.id.bottomNav)
+        bottomNav.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        bottomNav.setContent {
+            AppBottomBar(selectedItemId = R.id.navDashboard) { itemId ->
+                BottomNavHelper.navigate(this@DashboardActivity, R.id.navDashboard, itemId)
+            }
+        }
     }
 }

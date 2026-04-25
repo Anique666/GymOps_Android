@@ -4,6 +4,6 @@
     <dimen name="screen_padding">16dp</dimen>
     <dimen name="section_spacing">20dp</dimen>
     <dimen name="card_radius">16dp</dimen>
-    <dimen name="top_bar_height">56dp</dimen>
+    <dimen name="top_bar_height">72dp</dimen>
     <dimen name="bottom_nav_height">72dp</dimen>
 </resources>

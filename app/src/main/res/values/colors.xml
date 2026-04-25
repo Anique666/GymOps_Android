@@ -23,6 +23,7 @@
     <color name="chip_warning_text">#A54B00</color>
     <color name="chip_expired_bg">#F9DBD9</color>
     <color name="chip_expired_text">#9D1C1C</color>
+    <color name="nav_active_indicator">#D8CEE7</color>
 
     <color name="divider">#D9DDE1</color>
     <color name="black">#000000</color>

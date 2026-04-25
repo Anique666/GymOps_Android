@@ -20,6 +20,10 @@ class MemberRepository(private val memberDao: MemberDao) {
         ioExecutor.execute { memberDao.insertMember(member) }
     }
 
+    fun insertMemberAndReturnId(member: Member): Long {
+        return ioExecutor.submit<Long> { memberDao.insertMember(member) }.get()
+    }
+
     fun updateMember(member: Member) {
         ioExecutor.execute { memberDao.updateMember(member) }
     }

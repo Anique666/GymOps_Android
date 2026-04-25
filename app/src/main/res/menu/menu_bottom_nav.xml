@@ -9,6 +9,10 @@
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="@string/nav_members" />
     <item
+        android:id="@+id/navInventory"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/nav_inventory" />
+    <item
         android:id="@+id/navPlans"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/nav_plans" />

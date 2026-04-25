@@ -8,12 +8,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.entity.Plan
+import com.example.gymmanagement.ui.common.AppBottomBar
 import com.example.gymmanagement.ui.common.BottomNavHelper
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PlanManagementActivity : AppCompatActivity() {
@@ -46,8 +48,13 @@ class PlanManagementActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
-        BottomNavHelper.setup(bottomNav, R.id.navPlans, this)
+        val bottomNav: ComposeView = findViewById(R.id.bottomNav)
+        bottomNav.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        bottomNav.setContent {
+            AppBottomBar(selectedItemId = R.id.navPlans) { itemId ->
+                BottomNavHelper.navigate(this@PlanManagementActivity, R.id.navPlans, itemId)
+            }
+        }
     }
 
     private fun setupRecyclerView() {
