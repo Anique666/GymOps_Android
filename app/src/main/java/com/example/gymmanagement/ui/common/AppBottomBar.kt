@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.example.gymmanagement.R
 
@@ -52,7 +53,7 @@ fun AppBottomBar(selectedItemId: Int, onDestinationSelected: (Int) -> Unit) {
         )
     )
 
-    NavigationBar(containerColor = Color.White) {
+    NavigationBar(containerColor = colorResource(R.color.surface)) {
         destinations.forEach { destination ->
             val selected = selectedItemId == destination.itemId
             NavigationBarItem(
@@ -72,11 +73,11 @@ fun AppBottomBar(selectedItemId: Int, onDestinationSelected: (Int) -> Unit) {
                     Text(destination.label)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0xFF111316),
-                    selectedTextColor = Color(0xFF111316),
-                    unselectedIconColor = Color(0xFF5F6368),
-                    unselectedTextColor = Color(0xFF5F6368),
-                    indicatorColor = Color(0xFFD8CEE7)
+                    selectedIconColor = colorResource(R.color.text_primary),
+                    selectedTextColor = colorResource(R.color.text_primary),
+                    unselectedIconColor = colorResource(R.color.text_secondary),
+                    unselectedTextColor = colorResource(R.color.text_secondary),
+                    indicatorColor = colorResource(R.color.nav_active_indicator)
                 )
             )
         }
