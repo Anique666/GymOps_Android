@@ -51,6 +51,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +68,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.isSystemInDarkTheme
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.entity.EquipmentEntity
 import com.example.gymmanagement.data.local.entity.EquipmentStatus
@@ -84,9 +87,9 @@ class InventoryActivity : AppCompatActivity() {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             var showAddDialog by rememberSaveable { mutableStateOf(false) }
 
-            MaterialTheme {
+            MaterialTheme(colorScheme = inventoryColorScheme()) {
                 Scaffold(
-                    containerColor = Color(0xFFECEDEE),
+                    containerColor = MaterialTheme.colorScheme.background,
                     bottomBar = {
                         AppBottomBar(selectedItemId = R.id.navInventory) { itemId ->
                             BottomNavHelper.navigate(this@InventoryActivity, R.id.navInventory, itemId)
@@ -95,8 +98,8 @@ class InventoryActivity : AppCompatActivity() {
                     floatingActionButton = {
                         FloatingActionButton(
                             onClick = { showAddDialog = true },
-                            containerColor = Color(0xFFF28C28),
-                            contentColor = Color.Black
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -139,6 +142,7 @@ fun InventoryScreen(
     onStatusSelected: (EquipmentEntity, EquipmentStatus) -> Unit
 ) {
     var filterExpanded by remember { mutableStateOf(false) }
+    val colors = MaterialTheme.colorScheme
 
     LazyColumn(
         modifier = Modifier
@@ -153,29 +157,28 @@ fun InventoryScreen(
                 Text(
                     text = stringResource(R.string.inventory_label_operations),
                     style = MaterialTheme.typography.labelMedium,
-                    color = Color(0xFFA54B00)
+                    color = colors.tertiary
                 )
                 Text(
                     text = stringResource(R.string.inventory_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF0A4642)
+                    color = colors.primary
                 )
                 Text(
                     text = stringResource(R.string.inventory_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF4E545A)
+                    color = colors.onSurfaceVariant
                 )
             }
         }
-
         item {
             KpiCard(
                 title = stringResource(R.string.inventory_total_assets),
                 value = uiState.totalAssets.toString().padStart(2, '0'),
                 footer = stringResource(R.string.inventory_total_assets_note),
                 icon = Icons.Default.FitnessCenter,
-                iconBg = Color(0xFFD9E2E2)
+                iconBg = colors.secondaryContainer
             )
         }
         item {
@@ -184,7 +187,7 @@ fun InventoryScreen(
                 value = uiState.underMaintenanceCount.toString().padStart(2, '0'),
                 footer = stringResource(R.string.inventory_under_maintenance_note),
                 icon = Icons.Default.Build,
-                iconBg = Color(0xFFF4E7DB)
+                iconBg = colors.errorContainer
             )
         }
         item {
@@ -193,7 +196,7 @@ fun InventoryScreen(
                 value = "${uiState.readyPercent}%",
                 footer = stringResource(R.string.inventory_ready_status_note),
                 icon = Icons.Default.CheckCircle,
-                iconBg = Color(0xFFDCE5E5)
+                iconBg = colors.tertiaryContainer
             )
         }
 
@@ -258,14 +261,14 @@ fun InventoryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(22.dp))
-                        .background(Color.White)
+                        .background(colors.surface)
                         .padding(24.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = stringResource(R.string.inventory_empty_state),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color(0xFF4E545A)
+                        color = colors.onSurfaceVariant
                     )
                 }
             }
@@ -285,6 +288,7 @@ fun InventoryScreen(
 
 @Composable
 private fun InventoryHeader() {
+    val colors = MaterialTheme.colorScheme
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -292,27 +296,27 @@ private fun InventoryHeader() {
         Icon(
             imageVector = Icons.Default.Menu,
             contentDescription = stringResource(R.string.a11y_open_navigation),
-            tint = Color(0xFF111316)
+            tint = colors.onSurface
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = stringResource(R.string.inventory_brand_name),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF111316)
+            color = colors.onSurface
         )
         Spacer(modifier = Modifier.weight(1f))
         Box(
             modifier = Modifier
                 .size(34.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF0A4642)),
+                .background(colors.primary),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = stringResource(R.string.a11y_profile_avatar),
-                tint = Color.White
+                tint = colors.onPrimary
             )
         }
     }
@@ -326,11 +330,12 @@ private fun KpiCard(
     icon: ImageVector,
     iconBg: Color
 ) {
+    val colors = MaterialTheme.colorScheme
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
+            .background(colors.surface)
             .padding(16.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -342,13 +347,13 @@ private fun KpiCard(
                         .background(iconBg),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(imageVector = icon, contentDescription = null, tint = Color(0xFF0A4642))
+                    Icon(imageVector = icon, contentDescription = null, tint = colors.primary)
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Text(title, style = MaterialTheme.typography.bodyMedium, color = Color(0xFF111316))
+                Text(title, style = MaterialTheme.typography.bodyMedium, color = colors.onSurface)
             }
-            Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, color = Color(0xFF062B2A))
-            Text(footer, style = MaterialTheme.typography.bodySmall, color = Color(0xFF5F6368))
+            Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, color = colors.onSurface)
+            Text(footer, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
     }
 }
@@ -360,12 +365,13 @@ fun EquipmentCard(
     onStatusSelected: (EquipmentStatus) -> Unit
 ) {
     var statusMenuExpanded by remember { mutableStateOf(false) }
+    val colors = MaterialTheme.colorScheme
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
+            .background(colors.surface)
             .padding(14.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -374,14 +380,14 @@ fun EquipmentCard(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(RoundedCornerShape(14.dp))
-                        .background(Color(0xFFE3E8EA)),
+                        .background(colors.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = categoryIcon(equipment.category),
                         contentDescription = null,
                         modifier = Modifier.size(34.dp),
-                        tint = Color(0xFF0A4642)
+                        tint = colors.primary
                     )
                 }
 
@@ -391,7 +397,7 @@ fun EquipmentCard(
                     Text(
                         text = equipment.name,
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFF111316),
+                        color = colors.onSurface,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -403,7 +409,7 @@ fun EquipmentCard(
                             equipment.category
                         ),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF5F6368)
+                        color = colors.onSurfaceVariant
                     )
                     StatusBadge(status = equipment.status)
                 }
@@ -418,13 +424,13 @@ fun EquipmentCard(
                 Text(
                     text = "$dateLabel: ${DateUtils.formatCardDate(equipment.lastServiceDate)}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF4E545A)
+                    color = colors.onSurfaceVariant
                 )
                 equipment.usageHours?.let { hours ->
                     Text(
                         text = stringResource(R.string.inventory_usage_hours, hours),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF4E545A)
+                        color = colors.onSurfaceVariant
                     )
                 }
             }
@@ -466,23 +472,24 @@ fun EquipmentCard(
 
 @Composable
 private fun StatusBadge(status: EquipmentStatus) {
+    val colors = MaterialTheme.colorScheme
     val (label, color, bg) = when (status) {
         EquipmentStatus.ACTIVE -> Triple(
             stringResource(R.string.inventory_status_active),
-            Color(0xFF0A7B58),
-            Color(0xFFDDF4EA)
+            colors.onSecondaryContainer,
+            colors.secondaryContainer
         )
 
         EquipmentStatus.IN_REPAIR -> Triple(
             stringResource(R.string.inventory_status_in_repair),
-            Color(0xFFB3261E),
-            Color(0xFFF9DBD9)
+            colors.onErrorContainer,
+            colors.errorContainer
         )
 
         EquipmentStatus.MAINTENANCE_DUE -> Triple(
             stringResource(R.string.inventory_status_maintenance_due),
-            Color(0xFFA54B00),
-            Color(0xFFFDEAD9)
+            colors.onTertiaryContainer,
+            colors.tertiaryContainer
         )
     }
 
@@ -633,7 +640,7 @@ fun AddEquipmentDialog(
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFFB3261E)
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -699,6 +706,57 @@ fun AddEquipmentDialog(
             DatePicker(state = datePickerState)
         }
     }
+}
+
+@Composable
+private fun inventoryColorScheme() = if (isSystemInDarkTheme()) {
+    darkColorScheme(
+        primary = Color(0xFF7ED2C8),
+        onPrimary = Color(0xFF062B2A),
+        primaryContainer = Color(0xFF1C3B38),
+        onPrimaryContainer = Color(0xFFBCEBE5),
+        secondary = Color(0xFFFFB66C),
+        onSecondary = Color(0xFF111316),
+        secondaryContainer = Color(0xFF46301A),
+        onSecondaryContainer = Color(0xFFFFDCB8),
+        tertiary = Color(0xFF8DD3FF),
+        onTertiary = Color(0xFF06202D),
+        tertiaryContainer = Color(0xFF203B3B),
+        onTertiaryContainer = Color(0xFFD9EFEF),
+        background = Color(0xFF111316),
+        onBackground = Color(0xFFECEFF2),
+        surface = Color(0xFF1A1D20),
+        onSurface = Color(0xFFECEFF2),
+        surfaceVariant = Color(0xFF24282D),
+        onSurfaceVariant = Color(0xFFB6BEC7),
+        error = Color(0xFFF28B82),
+        errorContainer = Color(0xFF4A2321),
+        onErrorContainer = Color(0xFFFFDAD6)
+    )
+} else {
+    lightColorScheme(
+        primary = Color(0xFF0A4642),
+        onPrimary = Color.White,
+        primaryContainer = Color(0xFFD9E2E2),
+        onPrimaryContainer = Color(0xFF062B2A),
+        secondary = Color(0xFFF28C28),
+        onSecondary = Color.Black,
+        secondaryContainer = Color(0xFFF4E7DB),
+        onSecondaryContainer = Color(0xFF6F3C00),
+        tertiary = Color(0xFFA54B00),
+        onTertiary = Color.White,
+        tertiaryContainer = Color(0xFFFDEAD9),
+        onTertiaryContainer = Color(0xFF6E3600),
+        background = Color(0xFFECEDEE),
+        onBackground = Color(0xFF111316),
+        surface = Color.White,
+        onSurface = Color(0xFF111316),
+        surfaceVariant = Color(0xFFE3E8EA),
+        onSurfaceVariant = Color(0xFF5F6368),
+        error = Color(0xFFB3261E),
+        errorContainer = Color(0xFFF9DBD9),
+        onErrorContainer = Color(0xFF9D1C1C)
+    )
 }
 
 private fun categoryIcon(category: String): ImageVector {

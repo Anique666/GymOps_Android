@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -49,6 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.isSystemInDarkTheme
 import com.example.gymmanagement.R
 import com.example.gymmanagement.data.local.model.LabelCount
 import com.example.gymmanagement.data.local.model.ReportRange
@@ -66,14 +69,15 @@ class ReportsActivity : AppCompatActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            MaterialTheme(colorScheme = appColorScheme) {
+            MaterialTheme(colorScheme = reportsColorScheme()) {
+                val colors = MaterialTheme.colorScheme
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             title = {
                                 Column {
                                     Text("Performance Insights", fontWeight = FontWeight.Bold)
-                                    Text("Analytics period", fontSize = 12.sp, color = mutedText)
+                                    Text("Analytics period", fontSize = 12.sp, color = colors.onSurfaceVariant)
                                 }
                             },
                             navigationIcon = {
@@ -82,21 +86,21 @@ class ReportsActivity : AppCompatActivity() {
                                         .padding(start = 12.dp)
                                         .size(36.dp)
                                         .clip(CircleShape)
-                                        .background(primaryDark),
+                                        .background(colors.primary),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text("M", color = Color.White, fontWeight = FontWeight.Bold)
+                                    Text("M", color = colors.onPrimary, fontWeight = FontWeight.Bold)
                                 }
                             },
                             actions = {
                                 Icon(
                                     imageVector = Icons.Default.Settings,
                                     contentDescription = null,
-                                    tint = primaryDark,
+                                    tint = colors.primary,
                                     modifier = Modifier.padding(end = 16.dp)
                                 )
                             },
-                            colors = TopAppBarDefaults.topAppBarColors(containerColor = background)
+                            colors = TopAppBarDefaults.topAppBarColors(containerColor = colors.background)
                         )
                     },
                     bottomBar = {
@@ -104,7 +108,7 @@ class ReportsActivity : AppCompatActivity() {
                             BottomNavHelper.navigate(this@ReportsActivity, R.id.navReports, itemId)
                         }
                     },
-                    containerColor = background
+                    containerColor = colors.background
                 ) { padding ->
                     LazyColumn(
                         modifier = Modifier
@@ -216,13 +220,14 @@ private fun RangeSelector(selected: ReportRange, onSelected: (ReportRange) -> Un
 
 @Composable
 private fun RevenueHeaderCard(totalRevenue: Double, trendPercent: Double, revenueSeries: List<RevenuePoint>) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(28.dp)) {
+    val colors = MaterialTheme.colorScheme
+    Card(colors = CardDefaults.cardColors(containerColor = colors.surface), shape = RoundedCornerShape(28.dp)) {
         Column(modifier = Modifier.padding(18.dp)) {
-            Text("Total Revenue", color = mutedText, fontSize = 14.sp)
+            Text("Total Revenue", color = colors.onSurfaceVariant, fontSize = 14.sp)
             Row(verticalAlignment = Alignment.Bottom) {
-                Text("₹${totalRevenue.toInt()}", fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = primaryDark)
+                Text("₹${totalRevenue.toInt()}", fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = colors.primary)
                 Spacer(modifier = Modifier.width(10.dp))
-                Text("${formatPercent(trendPercent)}", color = if (trendPercent >= 0) Color(0xFF0A7B58) else Color(0xFFB3261E))
+                Text("${formatPercent(trendPercent)}", color = if (trendPercent >= 0) Color(0xFF47C696) else Color(0xFFF28B82))
             }
             Spacer(modifier = Modifier.height(12.dp))
             LineChart(series = if (revenueSeries.isEmpty()) demoLine(totalRevenue) else revenueSeries)
@@ -232,12 +237,14 @@ private fun RevenueHeaderCard(totalRevenue: Double, trendPercent: Double, revenu
 
 @Composable
 private fun SectionHeader(title: String) {
-    Text(title, fontSize = 19.sp, fontWeight = FontWeight.Bold, color = primaryDark, modifier = Modifier.padding(top = 4.dp, bottom = 4.dp))
+    val colors = MaterialTheme.colorScheme
+    Text(title, fontSize = 19.sp, fontWeight = FontWeight.Bold, color = colors.primary, modifier = Modifier.padding(top = 4.dp, bottom = 4.dp))
 }
 
 @Composable
 private fun RevenueSection(series: List<RevenuePoint>, paymentDistribution: List<LabelCount>) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(24.dp)) {
+    val colors = MaterialTheme.colorScheme
+    Card(colors = CardDefaults.cardColors(containerColor = colors.surface), shape = RoundedCornerShape(24.dp)) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             BarChart(series = if (series.isEmpty()) demoBars() else series)
             DistributionBar(items = paymentDistribution)
@@ -247,40 +254,43 @@ private fun RevenueSection(series: List<RevenuePoint>, paymentDistribution: List
 
 @Composable
 private fun MembershipTrendsSection(newMembers: Int, expiredMembers: Int, renewedMembers: Int) {
+    val colors = MaterialTheme.colorScheme
     Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-        TrendTile("New", newMembers.toString(), Color(0xFFEFF5F4), primaryDark, Modifier.weight(1f))
-        TrendTile("Expired", expiredMembers.toString(), Color(0xFFFFEBEE), Color(0xFFB3261E), Modifier.weight(1f))
-        TrendTile("Renewed", renewedMembers.toString(), Color(0xFFDFF4EA), Color(0xFF0A7B58), Modifier.weight(1f))
+        TrendTile("New", newMembers.toString(), colors.secondaryContainer, colors.onSecondaryContainer, Modifier.weight(1f))
+        TrendTile("Expired", expiredMembers.toString(), colors.errorContainer, colors.onErrorContainer, Modifier.weight(1f))
+        TrendTile("Renewed", renewedMembers.toString(), colors.tertiaryContainer, colors.onTertiaryContainer, Modifier.weight(1f))
     }
 }
 
 @Composable
 private fun RetentionSection(retentionRate: Double, churnRate: Double) {
+    val colors = MaterialTheme.colorScheme
     Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-        MetricCard("Retention Rate", "${retentionRate.toInt()}%", primaryDark, Color(0xFFDFF4EA), Modifier.weight(1f))
-        MetricCard("Churn Rate", "${churnRate.toInt()}%", Color(0xFFB3261E), Color(0xFFF5F5F5), Modifier.weight(1f))
+        MetricCard("Retention Rate", "${retentionRate.toInt()}%", colors.onSecondaryContainer, colors.secondaryContainer, Modifier.weight(1f))
+        MetricCard("Churn Rate", "${churnRate.toInt()}%", colors.onErrorContainer, colors.errorContainer, Modifier.weight(1f))
     }
 }
 
 @Composable
 private fun ExpiryRiskSection(expiringSoon: Int) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(24.dp)) {
+    val colors = MaterialTheme.colorScheme
+    Card(colors = CardDefaults.cardColors(containerColor = colors.surface), shape = RoundedCornerShape(24.dp)) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Expiring soon", color = mutedText, fontSize = 12.sp)
-                    Text(expiringSoon.toString(), color = primaryDark, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Text("Expiring soon", color = colors.onSurfaceVariant, fontSize = 12.sp)
+                    Text(expiringSoon.toString(), color = colors.primary, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
-                Box(modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFFDE0D2)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.CalendarMonth, contentDescription = null, tint = Color(0xFFA54B00))
+                Box(modifier = Modifier.size(48.dp).clip(CircleShape).background(colors.tertiaryContainer), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Default.CalendarMonth, contentDescription = null, tint = colors.tertiary)
                 }
             }
             RiskBars()
             InsightCard(
                 title = "Churn warning",
                 message = "Review memberships nearing expiry and trigger renewal outreach for the most at-risk cohort.",
-                background = Color(0xFFFFE3CF),
-                accent = Color(0xFFA54B00)
+                background = colors.tertiaryContainer,
+                accent = colors.tertiary
             )
         }
     }
@@ -288,7 +298,8 @@ private fun ExpiryRiskSection(expiringSoon: Int) {
 
 @Composable
 private fun DemographicsSection(genderDistribution: List<LabelCount>, ageGroups: List<LabelCount>) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(24.dp)) {
+    val colors = MaterialTheme.colorScheme
+    Card(colors = CardDefaults.cardColors(containerColor = colors.surface), shape = RoundedCornerShape(24.dp)) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                 DonutChart(
@@ -316,9 +327,10 @@ private fun DemographicsSection(genderDistribution: List<LabelCount>, ageGroups:
 
 @Composable
 private fun TrendTile(title: String, value: String, background: Color, foreground: Color, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
     Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = background), shape = RoundedCornerShape(18.dp)) {
         Column(modifier = Modifier.padding(14.dp)) {
-            Text(title, color = mutedText, fontSize = 12.sp)
+            Text(title, color = colors.onSurfaceVariant, fontSize = 12.sp)
             Text(value, color = foreground, fontSize = 26.sp, fontWeight = FontWeight.Bold)
         }
     }
@@ -326,9 +338,10 @@ private fun TrendTile(title: String, value: String, background: Color, foregroun
 
 @Composable
 private fun MetricCard(title: String, value: String, foreground: Color, background: Color, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
     Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = background), shape = RoundedCornerShape(18.dp)) {
         Column(modifier = Modifier.padding(14.dp)) {
-            Text(title, color = mutedText, fontSize = 12.sp)
+            Text(title, color = colors.onSurfaceVariant, fontSize = 12.sp)
             Text(value, color = foreground, fontSize = 30.sp, fontWeight = FontWeight.Bold)
         }
     }
@@ -336,6 +349,7 @@ private fun MetricCard(title: String, value: String, foreground: Color, backgrou
 
 @Composable
 private fun InsightCard(title: String, message: String, background: Color, accent: Color) {
+    val colors = MaterialTheme.colorScheme
     Card(colors = CardDefaults.cardColors(containerColor = background), shape = RoundedCornerShape(18.dp)) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.size(42.dp).clip(CircleShape).background(accent.copy(alpha = 0.18f)), contentAlignment = Alignment.Center) {
@@ -344,7 +358,7 @@ private fun InsightCard(title: String, message: String, background: Color, accen
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(title, fontWeight = FontWeight.Bold, color = accent)
-                Text(message, color = primaryDark, fontSize = 13.sp)
+                Text(message, color = colors.onSurface, fontSize = 13.sp)
             }
         }
     }
@@ -352,16 +366,17 @@ private fun InsightCard(title: String, message: String, background: Color, accen
 
 @Composable
 private fun DistributionBar(items: List<LabelCount>) {
-    val colors = listOf(Color(0xFF0D5A55), Color(0xFFA54B00), Color(0xFFA8DADC))
+    val colors = MaterialTheme.colorScheme
+    val barColors = listOf(Color(0xFF0D5A55), Color(0xFFA54B00), Color(0xFFA8DADC))
     val weights = items.map { it.value.toFloat().coerceAtLeast(0.5f) }
-    Row(modifier = Modifier.fillMaxWidth().height(14.dp).clip(RoundedCornerShape(999.dp)).background(Color(0xFFE8EDEE))) {
+    Row(modifier = Modifier.fillMaxWidth().height(14.dp).clip(RoundedCornerShape(999.dp)).background(colors.surfaceVariant)) {
         if (items.isNotEmpty()) {
             items.forEachIndexed { index, _ ->
                 Box(
                     modifier = Modifier
                         .weight(weights[index])
                         .fillMaxWidth()
-                        .background(colors[index % colors.size])
+                        .background(barColors[index % barColors.size])
                 )
             }
         }
@@ -371,9 +386,9 @@ private fun DistributionBar(items: List<LabelCount>) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
             items.forEachIndexed { index, item ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(colors[index % colors.size]))
+                    Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(barColors[index % barColors.size]))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("${item.label} ${item.value}", fontSize = 11.sp, color = mutedText)
+                    Text("${item.label} ${item.value}", fontSize = 11.sp, color = colors.onSurfaceVariant)
                 }
             }
         }
@@ -382,31 +397,34 @@ private fun DistributionBar(items: List<LabelCount>) {
 
 @Composable
 private fun DistributionRow(label: String, value: String) {
+    val colors = MaterialTheme.colorScheme
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, fontSize = 13.sp, color = mutedText)
-        Text(value, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = primaryDark)
+        Text(label, fontSize = 13.sp, color = colors.onSurfaceVariant)
+        Text(value, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = colors.primary)
     }
 }
 
 @Composable
 private fun AgeRow(item: LabelCount, maxCount: Int) {
+    val colors = MaterialTheme.colorScheme
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(item.label, modifier = Modifier.width(54.dp), fontSize = 12.sp, color = mutedText)
-        Box(modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(999.dp)).background(Color(0xFFE8EDEE))) {
+        Text(item.label, modifier = Modifier.width(54.dp), fontSize = 12.sp, color = colors.onSurfaceVariant)
+        Box(modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(999.dp)).background(colors.surfaceVariant)) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(item.value.toFloat() / maxCount.toFloat())
                     .height(6.dp)
-                    .background(Color(0xFFA54B00))
+                    .background(colors.tertiary)
             )
         }
         Spacer(modifier = Modifier.width(10.dp))
-        Text(item.value.toString(), fontSize = 12.sp, color = primaryDark)
+        Text(item.value.toString(), fontSize = 12.sp, color = colors.primary)
     }
 }
 
 @Composable
 private fun LineChart(series: List<RevenuePoint>) {
+    val colors = MaterialTheme.colorScheme
     val values = if (series.isEmpty()) listOf(12f, 18f, 14f, 26f, 18f, 34f) else series.map { it.value.toFloat() }
     Canvas(modifier = Modifier.fillMaxWidth().height(150.dp)) {
         val max = values.maxOrNull()?.takeIf { it > 0 } ?: 1f
@@ -415,14 +433,15 @@ private fun LineChart(series: List<RevenuePoint>) {
             Offset(x = index * stepX, y = size.height - ((value / max) * (size.height - 20.dp.toPx())) - 10.dp.toPx())
         }
         for (index in 0 until points.lastIndex) {
-            drawLine(primaryDark.copy(alpha = 0.28f), points[index], points[index + 1], strokeWidth = 4f, cap = StrokeCap.Round)
+            drawLine(colors.primary.copy(alpha = 0.28f), points[index], points[index + 1], strokeWidth = 4f, cap = StrokeCap.Round)
         }
-        points.forEach { point -> drawCircle(primaryDark, radius = 6f, center = point) }
+        points.forEach { point -> drawCircle(colors.primary, radius = 6f, center = point) }
     }
 }
 
 @Composable
 private fun BarChart(series: List<RevenuePoint>) {
+    val colors = MaterialTheme.colorScheme
     val values = if (series.isEmpty()) listOf(20f, 34f, 28f, 45f, 60f, 30f) else series.map { it.value.toFloat() }
     Canvas(modifier = Modifier.fillMaxWidth().height(180.dp)) {
         val max = values.maxOrNull()?.takeIf { it > 0 } ?: 1f
@@ -432,7 +451,7 @@ private fun BarChart(series: List<RevenuePoint>) {
             val left = index * (barWidth + gap) + gap / 2
             val barHeight = (value / max) * (size.height - 16.dp.toPx())
             drawRoundRect(
-                color = if (index == values.lastIndex) Color(0xFFA54B00) else primaryDark.copy(alpha = 0.78f),
+                color = if (index == values.lastIndex) colors.tertiary else colors.primary.copy(alpha = 0.78f),
                 topLeft = Offset(left, size.height - barHeight),
                 size = Size(barWidth, barHeight),
                 cornerRadius = CornerRadius(10.dp.toPx())
@@ -443,6 +462,7 @@ private fun BarChart(series: List<RevenuePoint>) {
 
 @Composable
 private fun DonutChart(slices: List<DonutSlice>, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
     val total = slices.sumOf { it.value.toDouble() }.toFloat().coerceAtLeast(1f)
     Canvas(modifier = modifier.size(128.dp)) {
         var startAngle = -90f
@@ -452,15 +472,16 @@ private fun DonutChart(slices: List<DonutSlice>, modifier: Modifier = Modifier) 
             drawArc(color = slice.color, startAngle = startAngle, sweepAngle = sweep, useCenter = false, style = stroke)
             startAngle += sweep
         }
-        drawCircle(color = background, radius = size.minDimension / 2.8f)
+        drawCircle(color = colors.background, radius = size.minDimension / 2.8f)
     }
 }
 
 @Composable
 private fun RiskBars() {
+    val colors = MaterialTheme.colorScheme
     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
         listOf(0.4f, 0.62f, 0.88f, 0.5f).forEach { heightFactor ->
-            Box(modifier = Modifier.width(14.dp).height((56 * heightFactor).dp).clip(RoundedCornerShape(999.dp)).background(primaryDark.copy(alpha = 0.65f)))
+            Box(modifier = Modifier.width(14.dp).height((56 * heightFactor).dp).clip(RoundedCornerShape(999.dp)).background(colors.primary.copy(alpha = 0.65f)))
         }
     }
 }
@@ -487,17 +508,53 @@ private fun demoBars(): List<RevenuePoint> = listOf(
 
 private fun formatPercent(value: Double): String = "${kotlin.math.abs(value).toInt()}%"
 
-private val background = Color(0xFFECEDEE)
-private val primaryDark = Color(0xFF0A4642)
-private val mutedText = Color(0xFF5F6368)
-
-private val appColorScheme = androidx.compose.material3.lightColorScheme(
-    primary = primaryDark,
-    secondary = Color(0xFFF28C28),
-    surface = Color.White,
-    background = background,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onSurface = Color(0xFF111316),
-    onBackground = Color(0xFF111316)
-)
+@Composable
+private fun reportsColorScheme() = if (isSystemInDarkTheme()) {
+    darkColorScheme(
+        primary = Color(0xFF7ED2C8),
+        onPrimary = Color(0xFF062B2A),
+        primaryContainer = Color(0xFF1C3B38),
+        onPrimaryContainer = Color(0xFFBCEBE5),
+        secondary = Color(0xFFFFB66C),
+        onSecondary = Color(0xFF111316),
+        secondaryContainer = Color(0xFF46301A),
+        onSecondaryContainer = Color(0xFFFFDCB8),
+        tertiary = Color(0xFFA54B00),
+        onTertiary = Color.White,
+        tertiaryContainer = Color(0xFF3D2A14),
+        onTertiaryContainer = Color(0xFFFFD9B9),
+        background = Color(0xFF111316),
+        onBackground = Color(0xFFECEFF2),
+        surface = Color(0xFF1A1D20),
+        onSurface = Color(0xFFECEFF2),
+        surfaceVariant = Color(0xFF24282D),
+        onSurfaceVariant = Color(0xFFB6BEC7),
+        error = Color(0xFFF28B82),
+        errorContainer = Color(0xFF4A2321),
+        onErrorContainer = Color(0xFFFFDAD6)
+    )
+} else {
+    lightColorScheme(
+        primary = Color(0xFF0A4642),
+        onPrimary = Color.White,
+        primaryContainer = Color(0xFFD9E2E2),
+        onPrimaryContainer = Color(0xFF062B2A),
+        secondary = Color(0xFFF28C28),
+        onSecondary = Color.Black,
+        secondaryContainer = Color(0xFFEFF5F4),
+        onSecondaryContainer = Color(0xFF0A4642),
+        tertiary = Color(0xFFA54B00),
+        onTertiary = Color.White,
+        tertiaryContainer = Color(0xFFFDEAD9),
+        onTertiaryContainer = Color(0xFF6E3600),
+        background = Color(0xFFECEDEE),
+        onBackground = Color(0xFF111316),
+        surface = Color.White,
+        onSurface = Color(0xFF111316),
+        surfaceVariant = Color(0xFFE8EDEE),
+        onSurfaceVariant = Color(0xFF5F6368),
+        error = Color(0xFFB3261E),
+        errorContainer = Color(0xFFFFEBEE),
+        onErrorContainer = Color(0xFFB3261E)
+    )
+}
