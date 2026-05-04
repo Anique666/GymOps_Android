@@ -141,6 +141,11 @@ class ReportsActivity : AppCompatActivity() {
                         }
 
                         item {
+                            SectionHeader("Pending Collections")
+                            PendingCashCard(totalPendingCash = uiState.snapshot.pendingCashTotal)
+                        }
+
+                        item {
                             SectionHeader("Membership Trends")
                             MembershipTrendsSection(
                                 newMembers = uiState.snapshot.newMembers,
@@ -248,6 +253,18 @@ private fun RevenueSection(series: List<RevenuePoint>, paymentDistribution: List
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             BarChart(series = if (series.isEmpty()) demoBars() else series)
             DistributionBar(items = paymentDistribution)
+        }
+    }
+}
+
+@Composable
+private fun PendingCashCard(totalPendingCash: Double) {
+    val colors = MaterialTheme.colorScheme
+    Card(colors = CardDefaults.cardColors(containerColor = colors.surface), shape = RoundedCornerShape(24.dp)) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Cash yet to come", color = colors.onSurfaceVariant, fontSize = 12.sp)
+            Text("₹${totalPendingCash.toInt()}", fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = colors.secondary)
+            Text("Outstanding across all active and partially paid memberships.", color = colors.onSurfaceVariant, fontSize = 13.sp)
         }
     }
 }

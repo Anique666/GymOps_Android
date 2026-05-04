@@ -49,9 +49,9 @@ class MemberListActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val recyclerView: RecyclerView = findViewById(R.id.rvMembers)
-        memberAdapter = MemberAdapter { member ->
+        memberAdapter = MemberAdapter { summary ->
             val intent = Intent(this, MemberDetailActivity::class.java)
-            intent.putExtra(MemberDetailActivity.EXTRA_MEMBER_ID, member.id)
+            intent.putExtra(MemberDetailActivity.EXTRA_MEMBER_ID, summary.member.id)
             startActivity(intent)
         }
 
@@ -88,8 +88,8 @@ class MemberListActivity : AppCompatActivity() {
             memberAdapter.submitList(list)
 
             tvTotalMembersCount.text = list.size.toString()
-            val activeCount = list.count { !MembershipStatusHelper.isExpired(it.expiryDate) }
-            val expiringSoonCount = list.count { MembershipStatusHelper.isExpiringSoon(it.expiryDate) }
+            val activeCount = list.count { !MembershipStatusHelper.isExpired(it.member.expiryDate) }
+            val expiringSoonCount = list.count { MembershipStatusHelper.isExpiringSoon(it.member.expiryDate) }
             tvActiveNowCount.text = activeCount.toString()
             tvExpiringSoonCount.text = expiringSoonCount.toString()
         }

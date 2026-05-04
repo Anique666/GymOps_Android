@@ -7,18 +7,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymmanagement.R
-import com.example.gymmanagement.data.local.entity.Member
+import com.example.gymmanagement.data.local.model.MemberBillingSummary
 import com.example.gymmanagement.utils.DateUtils
 import com.example.gymmanagement.utils.MembershipStatusHelper
 import java.util.Locale
 
 class MemberAdapter(
-    private val onItemClick: (Member) -> Unit
+    private val onItemClick: (MemberBillingSummary) -> Unit
 ) : RecyclerView.Adapter<MemberAdapter.MemberViewHolder>() {
 
-    private val members = mutableListOf<Member>()
+    private val members = mutableListOf<MemberBillingSummary>()
 
-    fun submitList(newList: List<Member>) {
+    fun submitList(newList: List<MemberBillingSummary>) {
         members.clear()
         members.addAll(newList)
         notifyDataSetChanged()
@@ -40,15 +40,24 @@ class MemberAdapter(
         private val tvName: TextView = itemView.findViewById(R.id.tvMemberName)
         private val tvAvatar: TextView = itemView.findViewById(R.id.tvAvatar)
         private val tvPhone: TextView = itemView.findViewById(R.id.tvPhone)
+        private val tvPendingAmount: TextView = itemView.findViewById(R.id.tvPendingAmount)
         private val tvExpiry: TextView = itemView.findViewById(R.id.tvExpiry)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
         private val tvCta: TextView = itemView.findViewById(R.id.tvCta)
 
-        fun bind(member: Member) {
+        fun bind(summary: MemberBillingSummary) {
+            val member = summary.member
             tvName.text = member.name
             tvPhone.text = member.phone
             tvAvatar.text = member.name.firstOrNull()?.uppercaseChar()?.toString().orEmpty()
             tvExpiry.text = DateUtils.formatCardDate(member.expiryDate)
+
+            if (summary.pendingAmount > 0.0) {
+                tvPendingAmount.text = itemView.context.getString(R.string.label_pending_amount, summary.pendingAmount)
+                tvPendingAmount.visibility = View.VISIBLE
+            } else {
+                tvPendingAmount.visibility = View.GONE
+            }
 
             val status = MembershipStatusHelper.statusLabel(member.expiryDate)
             tvStatus.text = status.uppercase(Locale.getDefault())
@@ -73,8 +82,8 @@ class MemberAdapter(
                 }
             }
 
-            itemView.setOnClickListener { onItemClick(member) }
-            tvCta.setOnClickListener { onItemClick(member) }
+            itemView.setOnClickListener { onItemClick(summary) }
+            tvCta.setOnClickListener { onItemClick(summary) }
         }
     }
 }

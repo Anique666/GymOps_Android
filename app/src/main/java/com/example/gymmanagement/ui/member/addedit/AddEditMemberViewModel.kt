@@ -33,6 +33,7 @@ class AddEditMemberViewModel(application: Application) : AndroidViewModel(applic
         phone: String,
         joinDate: Long,
         planId: Int,
+        planPrice: Double,
         durationDays: Int,
         gender: String,
         dateOfBirth: Long,
@@ -44,6 +45,7 @@ class AddEditMemberViewModel(application: Application) : AndroidViewModel(applic
         val expiryDate = DateUtils.calculateExpiryDate(joinDate, durationDays)
         val paymentState = runCatching { PaymentStatus.valueOf(paymentStatus.uppercase()) }
             .getOrDefault(PaymentStatus.PAID)
+        val isFullyPaid = paymentState == PaymentStatus.PAID && paymentAmount >= planPrice
 
         val member = Member(
             id = existingId ?: 0,
@@ -52,7 +54,7 @@ class AddEditMemberViewModel(application: Application) : AndroidViewModel(applic
             joinDate = joinDate,
             expiryDate = expiryDate,
             planId = planId,
-            paymentStatus = paymentState == PaymentStatus.PAID,
+            paymentStatus = isFullyPaid,
             gender = gender,
             dateOfBirth = dateOfBirth,
             source = source.ifBlank { "Unknown" }

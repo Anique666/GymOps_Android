@@ -54,6 +54,17 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     tools:text="+1 (555) 123 4567" />
+
+                <TextView
+                    android:id="@+id/tvPendingAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/chip_expired_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:text="Due: Rs. 1,200.00" />
             </LinearLayout>
 
             <TextView

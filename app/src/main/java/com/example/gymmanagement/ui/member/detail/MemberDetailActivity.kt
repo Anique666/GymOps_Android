@@ -2,6 +2,7 @@ package com.example.gymmanagement.ui.member.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -11,7 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.example.gymmanagement.R
-import com.example.gymmanagement.data.local.entity.Member
+import com.example.gymmanagement.data.local.model.MemberBillingSummary
 import com.example.gymmanagement.ui.common.AppBottomBar
 import com.example.gymmanagement.ui.common.BottomNavHelper
 import com.example.gymmanagement.ui.member.addedit.AddEditMemberActivity
@@ -24,7 +25,7 @@ class MemberDetailActivity : AppCompatActivity() {
 
     private val viewModel: MemberDetailViewModel by viewModels()
 
-    private var currentMember: Member? = null
+    private var currentSummary: MemberBillingSummary? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,7 @@ class MemberDetailActivity : AppCompatActivity() {
         val tvStatus: TextView = findViewById(R.id.tvDetailStatus)
         val tvPlanSubtitle: TextView = findViewById(R.id.tvPlanSubtitle)
         val tvLastBilling: TextView = findViewById(R.id.tvLastBilling)
+        val tvPendingAmount: TextView = findViewById(R.id.tvPendingAmountDetail)
         val tvAvatarLarge: TextView = findViewById(R.id.tvAvatarLarge)
         val ivPaymentState: ImageView = findViewById(R.id.ivPaymentState)
 
@@ -51,23 +53,34 @@ class MemberDetailActivity : AppCompatActivity() {
         setupBottomNav()
 
         val btnEdit: MaterialButton = findViewById(R.id.btnEditMember)
+        val btnRenew: MaterialButton = findViewById(R.id.btnRenewPlan)
         val btnDelete: MaterialButton = findViewById(R.id.btnDeleteMember)
 
-        viewModel.getMemberById(memberId).observe(this) { member ->
-            member ?: return@observe
-            currentMember = member
+        viewModel.getMemberBillingSummaryById(memberId).observe(this) { summary ->
+            summary ?: return@observe
+            currentSummary = summary
+            val member = summary.member
 
             tvName.text = member.name
             tvPhone.text = member.phone
             tvAvatarLarge.text = member.name.firstOrNull()?.uppercaseChar()?.toString().orEmpty()
             tvJoinDate.text = DateUtils.formatDate(member.joinDate)
             tvExpiryDate.text = DateUtils.formatDate(member.expiryDate)
-            tvPayment.text = if (member.paymentStatus) getString(R.string.label_paid) else getString(R.string.label_pending)
+            tvPayment.text = if (summary.pendingAmount <= 0.0) getString(R.string.label_paid) else getString(R.string.label_pending)
             tvStatus.text = MembershipStatusHelper.statusLabel(member.expiryDate)
-            tvPlanSubtitle.text = getString(R.string.label_placeholder_plan_subtitle)
-            tvLastBilling.text = getString(R.string.label_last_billing, DateUtils.formatCardDate(member.joinDate))
+            tvPlanSubtitle.text = summary.planName
+            tvLastBilling.text = getString(
+                R.string.label_last_billing,
+                if (summary.latestPaymentDate > 0L) DateUtils.formatCardDate(summary.latestPaymentDate) else DateUtils.formatCardDate(member.joinDate)
+            )
+            if (summary.pendingAmount > 0.0) {
+                tvPendingAmount.text = getString(R.string.label_pending_amount, summary.pendingAmount)
+                tvPendingAmount.visibility = View.VISIBLE
+            } else {
+                tvPendingAmount.visibility = View.GONE
+            }
             ivPaymentState.setColorFilter(
-                if (member.paymentStatus) {
+                if (summary.pendingAmount <= 0.0) {
                     ContextCompat.getColor(this, R.color.success)
                 } else {
                     ContextCompat.getColor(this, R.color.warning)
@@ -76,14 +89,26 @@ class MemberDetailActivity : AppCompatActivity() {
         }
 
         btnEdit.setOnClickListener {
-            val member = currentMember ?: return@setOnClickListener
-            val intent = Intent(this, AddEditMemberActivity::class.java)
-            intent.putExtra(AddEditMemberActivity.EXTRA_MEMBER_ID, member.id)
-            startActivity(intent)
+            val member = currentSummary?.member ?: return@setOnClickListener
+            startActivity(Intent(this, AddEditMemberActivity::class.java).apply {
+                putExtra(AddEditMemberActivity.EXTRA_MEMBER_ID, member.id)
+            })
+        }
+
+        btnRenew.setOnClickListener {
+            val summary = currentSummary ?: return@setOnClickListener
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.action_renew_plan))
+                .setMessage(getString(R.string.dialog_renew_member_message, summary.planName, summary.member.name))
+                .setPositiveButton(getString(R.string.action_renew_plan)) { _, _ ->
+                    viewModel.renewMember(summary)
+                }
+                .setNegativeButton(getString(R.string.dialog_cancel), null)
+                .show()
         }
 
         btnDelete.setOnClickListener {
-            val member = currentMember ?: return@setOnClickListener
+            val member = currentSummary?.member ?: return@setOnClickListener
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_delete_member_title))
                 .setMessage(getString(R.string.dialog_delete_member_message))

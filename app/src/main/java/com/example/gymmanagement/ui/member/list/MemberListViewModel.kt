@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.example.gymmanagement.data.local.entity.Member
+import com.example.gymmanagement.data.local.model.MemberBillingSummary
 import com.example.gymmanagement.data.repository.MemberRepository
 import com.example.gymmanagement.di.AppContainer
 
@@ -12,13 +13,13 @@ class MemberListViewModel(application: Application) : AndroidViewModel(applicati
 
     private val memberRepository: MemberRepository = AppContainer(application).memberRepository
 
-    val allMembers: LiveData<List<Member>> = memberRepository.getAllMembers()
+    val allMembers: LiveData<List<MemberBillingSummary>> = memberRepository.getAllMemberBillingSummaries()
 
-    private var searchSource: LiveData<List<Member>>? = null
+    private var searchSource: LiveData<List<MemberBillingSummary>>? = null
     private var isSearchMode = false
 
-    private val _members = MediatorLiveData<List<Member>>()
-    val members: LiveData<List<Member>> = _members
+    private val _members = MediatorLiveData<List<MemberBillingSummary>>()
+    val members: LiveData<List<MemberBillingSummary>> = _members
 
     init {
         _members.addSource(allMembers) { _members.value = it }
@@ -40,7 +41,7 @@ class MemberListViewModel(application: Application) : AndroidViewModel(applicati
             isSearchMode = true
         }
 
-        val source = memberRepository.searchMembers(query.trim())
+        val source = memberRepository.searchMemberBillingSummaries(query.trim())
         searchSource = source
         _members.addSource(source) { _members.value = it }
     }

@@ -276,8 +276,8 @@ fun InventoryScreen(
             items(uiState.equipment, key = { equipment -> equipment.id }) { equipment ->
                 EquipmentCard(
                     equipment = equipment,
-                    onPrimaryAction = { onPrimaryAction(equipment) },
-                    onStatusSelected = { status -> onStatusSelected(equipment, status) }
+                            onPrimaryAction = { onPrimaryAction(equipment) },
+                            onStatusSelected = { status -> onStatusSelected(equipment, status) }
                 )
             }
         }
@@ -365,6 +365,7 @@ fun EquipmentCard(
     onStatusSelected: (EquipmentStatus) -> Unit
 ) {
     var statusMenuExpanded by remember { mutableStateOf(false) }
+    var showInspectDialog by remember { mutableStateOf(false) }
     val colors = MaterialTheme.colorScheme
 
     Box(
@@ -437,7 +438,13 @@ fun EquipmentCard(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedButton(
-                    onClick = onPrimaryAction,
+                    onClick = {
+                        if (equipment.status == EquipmentStatus.ACTIVE) {
+                            showInspectDialog = true
+                        } else {
+                            onPrimaryAction()
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(actionLabel(equipment.status))
@@ -468,6 +475,84 @@ fun EquipmentCard(
             }
         }
     }
+
+    if (showInspectDialog) {
+        InspectDialog(
+            equipment = equipment,
+            onDismiss = { showInspectDialog = false },
+            onMarkWorking = { onPrimaryAction() },
+            onMarkNeedsMaintenance = { onStatusSelected(EquipmentStatus.MAINTENANCE_DUE) },
+            onMarkUnderMaintenance = { onStatusSelected(EquipmentStatus.IN_REPAIR) }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InspectDialog(
+    equipment: EquipmentEntity,
+    onDismiss: () -> Unit,
+    onMarkWorking: () -> Unit,
+    onMarkNeedsMaintenance: () -> Unit,
+    onMarkUnderMaintenance: () -> Unit
+) {
+    val options = listOf(
+        stringResource(R.string.inventory_condition_working),
+        stringResource(R.string.inventory_condition_needs_maintenance),
+        stringResource(R.string.inventory_condition_under_maintenance)
+    )
+
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(options[0]) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.inventory_inspect_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.inventory_inspect_prompt))
+
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = selected,
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true },
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.inventory_inspect_condition_label)) },
+                        trailingIcon = {
+                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                        }
+                    )
+
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        options.forEach { opt ->
+                            DropdownMenuItem(text = { Text(opt) }, onClick = {
+                                selected = opt
+                                expanded = false
+                            })
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                when (selected) {
+                    options[0] -> onMarkWorking()
+                    options[1] -> onMarkNeedsMaintenance()
+                    options[2] -> onMarkUnderMaintenance()
+                }
+                onDismiss()
+            }) {
+                Text(stringResource(R.string.dialog_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dialog_cancel)) }
+        }
+    )
 }
 
 @Composable
@@ -782,7 +867,7 @@ private fun statusLabel(status: EquipmentStatus): String {
 private fun actionLabel(status: EquipmentStatus): String {
     return when (status) {
         EquipmentStatus.ACTIVE -> stringResource(R.string.inventory_action_inspect)
-        EquipmentStatus.IN_REPAIR -> stringResource(R.string.inventory_action_view_ticket)
-        EquipmentStatus.MAINTENANCE_DUE -> stringResource(R.string.inventory_action_maintenance)
+        EquipmentStatus.IN_REPAIR -> stringResource(R.string.inventory_action_mark_working)
+        EquipmentStatus.MAINTENANCE_DUE -> stringResource(R.string.inventory_action_mark_under_maintenance)
     }
 }

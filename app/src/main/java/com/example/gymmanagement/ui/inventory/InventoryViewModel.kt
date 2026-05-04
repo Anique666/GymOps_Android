@@ -55,7 +55,7 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         val total = allEquipment.size
-        val underMaintenance = allEquipment.count { it.status == EquipmentStatus.IN_REPAIR }
+        val underMaintenance = allEquipment.count { it.status == EquipmentStatus.IN_REPAIR || it.status == EquipmentStatus.MAINTENANCE_DUE }
         val activeCount = allEquipment.count { it.status == EquipmentStatus.ACTIVE }
         val readyPercent = if (total == 0) {
             0

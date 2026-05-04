@@ -7,6 +7,36 @@
     android:background="@color/background"
     tools:context=".ui.member.detail.MemberDetailActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarMemberDetail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@color/background"
+        android:elevation="0dp"
+        app:logo="@drawable/ic_brand_logo"
+        app:logoDescription="@string/a11y_brand_logo"
+        app:navigationIcon="@android:drawable/ic_media_previous"
+        app:navigationIconTint="@color/primary_variant"
+        app:subtitle="@string/toolbar_subtitle_member_detail"
+        app:subtitleTextColor="@color/text_secondary"
+        app:title="@string/member_profile_title"
+        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:titleTextColor="@color/text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/a11y_open_notifications"
+            android:src="@android:drawable/ic_menu_preferences"
+            app:tint="@color/primary_variant" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollDetail"
         android:layout_width="0dp"
@@ -85,34 +115,6 @@
                         android:textColor="@color/chip_warning_text"
                         android:textSize="12sp"
                         android:textStyle="bold" />
-
-                    <com.google.android.material.appbar.MaterialToolbar
-                        android:id="@+id/toolbarMemberDetail"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/top_bar_height"
-                        android:layout_marginTop="32dp"
-                        android:background="@color/background"
-                        android:elevation="0dp"
-                        app:logo="@drawable/ic_brand_logo"
-                        app:logoDescription="@string/a11y_brand_logo"
-                        app:navigationIcon="@android:drawable/ic_media_previous"
-                        app:navigationIconTint="@color/primary_variant"
-                        app:subtitle="@string/toolbar_subtitle_member_detail"
-                        app:subtitleTextColor="@color/text_secondary"
-                        app:title="@string/member_profile_title"
-                        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                        app:titleTextColor="@color/text_primary">
-
-                        <ImageView
-                            android:id="@+id/ivProfile"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="end"
-                            android:layout_marginEnd="16dp"
-                            android:contentDescription="@string/a11y_open_notifications"
-                            android:src="@android:drawable/ic_menu_preferences"
-                            app:tint="@color/primary_variant" />
-                    </com.google.android.material.appbar.MaterialToolbar>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -211,6 +213,17 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp"
                         tools:text="Last billing: Oct 12, 2023" />
+
+                    <TextView
+                        android:id="@+id/tvPendingAmountDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/chip_expired_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:text="Due: Rs. 1,200.00" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -347,10 +360,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEditMember"
+                android:id="@+id/btnRenewPlan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:text="@string/action_renew_plan" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditMember"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/action_edit_profile" />
 
             <com.google.android.material.button.MaterialButton

@@ -71,6 +71,27 @@ interface PaymentDao {
         """
     )
     fun observeRenewedMembersCount(startTime: Long, endTime: Long): Flow<Int>
+
+    @Query(
+        """
+        SELECT COALESCE(SUM(
+            CASE
+                WHEN p.price > COALESCE(lp.amount, 0) THEN p.price - COALESCE(lp.amount, 0)
+                ELSE 0
+            END
+        ), 0)
+        FROM members m
+        INNER JOIN plans p ON p.id = m.planId
+        LEFT JOIN payments lp ON lp.id = (
+            SELECT id
+            FROM payments
+            WHERE memberId = m.id
+            ORDER BY paymentDate DESC
+            LIMIT 1
+        )
+        """
+    )
+    fun observePendingCashTotal(): Flow<Double>
 }
 
 data class RevenuePointRow(

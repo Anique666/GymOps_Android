@@ -18,6 +18,7 @@ class ReportsRepository(
 
     fun observeReports(range: ReportRange, startTime: Long, endTime: Long): Flow<ReportsSnapshot> {
         val totalRevenue = paymentDao.observeRevenueTotal(startTime, endTime)
+        val pendingCashTotal = paymentDao.observePendingCashTotal()
         val previousWindow = when (range) {
             ReportRange.TODAY -> 24L * 60L * 60L * 1000L
             ReportRange.WEEK -> 7L * 24L * 60L * 60L * 1000L
@@ -40,6 +41,7 @@ class ReportsRepository(
 
         return combine(
             totalRevenue,
+            pendingCashTotal,
             previousRevenue,
             series,
             paymentDistribution,
@@ -51,19 +53,20 @@ class ReportsRepository(
             dateOfBirths
         ) { values ->
             val currentRevenue = values[0] as Double
-            val priorRevenue = values[1] as Double
+            val pendingCash = values[1] as Double
+            val priorRevenue = values[2] as Double
             val revenueTrendPercent = if (priorRevenue > 0.0) {
                 ((currentRevenue - priorRevenue) / priorRevenue) * 100.0
             } else {
                 0.0
             }
 
-            val revenueSeries = (values[2] as List<*>).mapNotNull { row ->
+            val revenueSeries = (values[3] as List<*>).mapNotNull { row ->
                 val item = row as? com.example.gymmanagement.data.local.dao.RevenuePointRow ?: return@mapNotNull null
                 RevenuePoint(item.label, item.value)
             }
 
-            val paymentMethods = (values[3] as List<*>).mapNotNull { row ->
+            val paymentMethods = (values[4] as List<*>).mapNotNull { row ->
                 val item = row as? com.example.gymmanagement.data.local.dao.PaymentDistributionRow ?: return@mapNotNull null
                 LabelCount(item.label, item.value)
             }.let { raw ->
@@ -76,9 +79,9 @@ class ReportsRepository(
                 }
             }
 
-            val newMembersCount = values[4] as Int
-            val expiredMembersCount = values[5] as Int
-            val renewedMembersCount = values[6] as Int
+            val newMembersCount = values[5] as Int
+            val expiredMembersCount = values[6] as Int
+            val renewedMembersCount = values[7] as Int
             val retentionRate = if (expiredMembersCount > 0) {
                 (renewedMembersCount.toDouble() / expiredMembersCount.toDouble()) * 100.0
             } else {
@@ -90,14 +93,14 @@ class ReportsRepository(
                 0.0
             }
 
-            val expiringSoonCount = values[7] as Int
+            val expiringSoonCount = values[8] as Int
 
-            val genderRows = (values[8] as List<*>).mapNotNull { row ->
+            val genderRows = (values[9] as List<*>).mapNotNull { row ->
                 val item = row as? com.example.gymmanagement.data.local.dao.DemographicCountRow ?: return@mapNotNull null
                 LabelCount(item.label, item.value)
             }
 
-            val dobValues = values[9] as List<Long>
+            val dobValues = values[10] as List<Long>
             val now = System.currentTimeMillis()
             val ageGroups = dobValues.mapNotNull { dob ->
                 val age = calculateAge(dob, now)
@@ -114,6 +117,7 @@ class ReportsRepository(
                 revenueTrendPercent = revenueTrendPercent,
                 revenueSeries = revenueSeries,
                 paymentDistribution = paymentMethods,
+                pendingCashTotal = pendingCash,
                 newMembers = newMembersCount,
                 expiredMembers = expiredMembersCount,
                 renewedMembers = renewedMembersCount,

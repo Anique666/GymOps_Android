@@ -33,6 +33,7 @@ data class ReportsSnapshot(
     val revenueTrendPercent: Double = 0.0,
     val revenueSeries: List<RevenuePoint> = emptyList(),
     val paymentDistribution: List<LabelCount> = emptyList(),
+    val pendingCashTotal: Double = 0.0,
     val newMembers: Int = 0,
     val expiredMembers: Int = 0,
     val renewedMembers: Int = 0,

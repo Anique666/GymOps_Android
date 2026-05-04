@@ -269,6 +269,7 @@ class AddEditMemberActivity : AppCompatActivity() {
             phone = phone,
             joinDate = joinDateMillis,
             planId = selectedPlan.id,
+            planPrice = selectedPlan.price,
             durationDays = selectedPlan.durationDays,
             gender = selectedGender,
             dateOfBirth = dateOfBirthMillis,
