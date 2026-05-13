@@ -77,6 +77,7 @@ object DemoDataSeeder {
 
         val memberId = memberDao.insertMember(
             Member(
+                remoteId = seedMemberRemoteId(seed.phone),
                 name = seed.name,
                 phone = seed.phone,
                 joinDate = joinDate,
@@ -85,32 +86,45 @@ object DemoDataSeeder {
                 paymentStatus = seed.initialPaymentStatus == PaymentStatus.PAID,
                 gender = seed.gender,
                 dateOfBirth = birthDateToMillis(seed.birthYear, seed.birthMonth, seed.birthDay),
-                source = seed.source
+                source = seed.source,
+                updatedAt = now,
+                synced = false,
+                deleted = false
             )
         ).toInt()
 
         paymentDao.insertPayment(
             PaymentEntity(
+                remoteId = seedPaymentRemoteId(seed.phone, initialPaymentDate, false),
                 memberId = memberId,
                 amount = plan.price,
                 paymentMethod = seed.initialPaymentMethod.name,
                 paymentDate = initialPaymentDate,
                 planId = plan.id,
                 isRenewal = false,
-                status = seed.initialPaymentStatus.name
+                status = seed.initialPaymentStatus.name,
+                updatedAt = now,
+                synced = false,
+                deleted = false
             )
         )
 
         if (seed.renewalDaysAgo != null) {
+            val renewalPaymentDate = daysAgoAtHour(seed.renewalDaysAgo, 17)
+                .coerceAtMost(now - (5L * 60L * 1000L))
             paymentDao.insertPayment(
                 PaymentEntity(
+                    remoteId = seedPaymentRemoteId(seed.phone, renewalPaymentDate, true),
                     memberId = memberId,
                     amount = plan.price,
                     paymentMethod = (seed.renewalMethod ?: seed.initialPaymentMethod).name,
-                    paymentDate = daysAgoAtHour(seed.renewalDaysAgo, 17).coerceAtMost(now - (5L * 60L * 1000L)),
+                    paymentDate = renewalPaymentDate,
                     planId = plan.id,
                     isRenewal = true,
-                    status = (seed.renewalStatus ?: PaymentStatus.PAID).name
+                    status = (seed.renewalStatus ?: PaymentStatus.PAID).name,
+                    updatedAt = now,
+                    synced = false,
+                    deleted = false
                 )
             )
         }
@@ -122,13 +136,15 @@ object DemoDataSeeder {
             return existingPlans
         }
 
+        val now = System.currentTimeMillis()
+
         val defaultPlans = listOf(
-            Plan(name = "Starter Monthly", durationDays = 30, price = 1499.0),
-            Plan(name = "Strength Quarterly", durationDays = 90, price = 3999.0),
-            Plan(name = "Transformation Half-Yearly", durationDays = 180, price = 7299.0),
-            Plan(name = "Annual Pro", durationDays = 365, price = 12999.0),
-            Plan(name = "Student Sprint", durationDays = 60, price = 2499.0),
-            Plan(name = "Weekend Flex", durationDays = 30, price = 1099.0)
+            Plan(remoteId = seedPlanRemoteId("Starter Monthly"), name = "Starter Monthly", durationDays = 30, price = 1499.0, updatedAt = now, synced = false, deleted = false),
+            Plan(remoteId = seedPlanRemoteId("Strength Quarterly"), name = "Strength Quarterly", durationDays = 90, price = 3999.0, updatedAt = now, synced = false, deleted = false),
+            Plan(remoteId = seedPlanRemoteId("Transformation Half-Yearly"), name = "Transformation Half-Yearly", durationDays = 180, price = 7299.0, updatedAt = now, synced = false, deleted = false),
+            Plan(remoteId = seedPlanRemoteId("Annual Pro"), name = "Annual Pro", durationDays = 365, price = 12999.0, updatedAt = now, synced = false, deleted = false),
+            Plan(remoteId = seedPlanRemoteId("Student Sprint"), name = "Student Sprint", durationDays = 60, price = 2499.0, updatedAt = now, synced = false, deleted = false),
+            Plan(remoteId = seedPlanRemoteId("Weekend Flex"), name = "Weekend Flex", durationDays = 30, price = 1099.0, updatedAt = now, synced = false, deleted = false)
         )
 
         defaultPlans.forEach { plan ->
@@ -153,6 +169,7 @@ object DemoDataSeeder {
 
     private fun buildEquipmentSeedData(now: Long): List<EquipmentEntity> = listOf(
         EquipmentEntity(
+            remoteId = seedEquipmentRemoteId("TX-99201-B"),
             name = "Skillrun Unity 7000",
             serialNumber = "TX-99201-B",
             category = "Cardio",
@@ -160,9 +177,13 @@ object DemoDataSeeder {
             purchaseDate = now - (420L * DAY_MILLIS),
             lastServiceDate = now - (14L * DAY_MILLIS),
             usageHours = 2410,
-            notes = "Installed in cardio wing"
+            notes = "Installed in cardio wing",
+            updatedAt = now,
+            synced = false,
+            deleted = false
         ),
         EquipmentEntity(
+            remoteId = seedEquipmentRemoteId("OR-7721-RA"),
             name = "Olympus HD Power Rack",
             serialNumber = "OR-7721-RA",
             category = "Strength",
@@ -170,9 +191,13 @@ object DemoDataSeeder {
             purchaseDate = now - (520L * DAY_MILLIS),
             lastServiceDate = now + (2L * DAY_MILLIS),
             usageHours = 1890,
-            notes = "Cable pulley replacement in progress"
+            notes = "Cable pulley replacement in progress",
+            updatedAt = now,
+            synced = false,
+            deleted = false
         ),
         EquipmentEntity(
+            remoteId = seedEquipmentRemoteId("DB-SET-001"),
             name = "Chromium DB Set (5-50kg)",
             serialNumber = "DB-SET-001",
             category = "Strength",
@@ -180,9 +205,13 @@ object DemoDataSeeder {
             purchaseDate = now - (300L * DAY_MILLIS),
             lastServiceDate = now - (20L * DAY_MILLIS),
             usageHours = 1540,
-            notes = "Monthly audit complete"
+            notes = "Monthly audit complete",
+            updatedAt = now,
+            synced = false,
+            deleted = false
         ),
         EquipmentEntity(
+            remoteId = seedEquipmentRemoteId("ABX2-3309"),
             name = "AirBike X2 Pro",
             serialNumber = "ABX2-3309",
             category = "Cardio",
@@ -190,9 +219,13 @@ object DemoDataSeeder {
             purchaseDate = now - (250L * DAY_MILLIS),
             lastServiceDate = now - (48L * DAY_MILLIS),
             usageHours = 1120,
-            notes = "Preventive servicing scheduled"
+            notes = "Preventive servicing scheduled",
+            updatedAt = now,
+            synced = false,
+            deleted = false
         ),
         EquipmentEntity(
+            remoteId = seedEquipmentRemoteId("FR-CBL-208"),
             name = "FlexRow Seated Cable",
             serialNumber = "FR-CBL-208",
             category = "Functional",
@@ -200,9 +233,28 @@ object DemoDataSeeder {
             purchaseDate = now - (610L * DAY_MILLIS),
             lastServiceDate = now - (11L * DAY_MILLIS),
             usageHours = 2760,
-            notes = "High use during evening peak"
+            notes = "High use during evening peak",
+            updatedAt = now,
+            synced = false,
+            deleted = false
         )
     )
+
+    private fun seedMemberRemoteId(phone: String): String = "seed-member-$phone"
+
+    private fun seedPlanRemoteId(name: String): String = "seed-plan-${slugify(name)}"
+
+    private fun seedEquipmentRemoteId(serialNumber: String): String = "seed-equipment-${slugify(serialNumber)}"
+
+    private fun seedPaymentRemoteId(phone: String, paymentDate: Long, isRenewal: Boolean): String =
+        "seed-payment-$phone-$paymentDate-${if (isRenewal) "renewal" else "initial"}"
+
+    private fun slugify(value: String): String = value
+        .trim()
+        .lowercase()
+        .replace(" ", "-")
+        .replace("/", "-")
+        .replace("_", "-")
 
     private fun buildMemberSeedData(): List<MemberSeed> = listOf(
         MemberSeed("Aarav Mehta", "9001001001", 0, 0, "MALE", 1994, 5, 12, "Instagram", PaymentMethod.UPI, PaymentStatus.PAID, renewalDaysAgo = 0, renewalMethod = PaymentMethod.UPI),

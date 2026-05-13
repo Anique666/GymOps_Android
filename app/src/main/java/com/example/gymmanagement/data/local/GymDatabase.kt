@@ -27,7 +27,7 @@ import com.example.gymmanagement.data.local.entity.Plan
         EquipmentEntity::class,
         MaintenanceEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(GymTypeConverters::class)
@@ -51,7 +51,7 @@ abstract class GymDatabase : RoomDatabase() {
                     GymDatabase::class.java,
                     "gym_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
 
                 INSTANCE = instance
@@ -121,6 +121,40 @@ abstract class GymDatabase : RoomDatabase() {
                 )
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_maintenance_records_equipmentId ON maintenance_records(equipmentId)")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_maintenance_records_status ON maintenance_records(status)")
+            }
+        }
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE members ADD COLUMN remoteId TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE members ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE members ADD COLUMN synced INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE members ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("UPDATE members SET updatedAt = strftime('%s','now')*1000 WHERE updatedAt = 0")
+
+                database.execSQL("ALTER TABLE plans ADD COLUMN remoteId TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE plans ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE plans ADD COLUMN synced INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE plans ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("UPDATE plans SET updatedAt = strftime('%s','now')*1000 WHERE updatedAt = 0")
+
+                database.execSQL("ALTER TABLE payments ADD COLUMN remoteId TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE payments ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE payments ADD COLUMN synced INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE payments ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("UPDATE payments SET updatedAt = strftime('%s','now')*1000 WHERE updatedAt = 0")
+
+                database.execSQL("ALTER TABLE equipment ADD COLUMN remoteId TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE equipment ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE equipment ADD COLUMN synced INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE equipment ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("UPDATE equipment SET updatedAt = strftime('%s','now')*1000 WHERE updatedAt = 0")
+
+                database.execSQL("ALTER TABLE maintenance_records ADD COLUMN remoteId TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE maintenance_records ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE maintenance_records ADD COLUMN synced INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE maintenance_records ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("UPDATE maintenance_records SET updatedAt = strftime('%s','now')*1000 WHERE updatedAt = 0")
             }
         }
     }

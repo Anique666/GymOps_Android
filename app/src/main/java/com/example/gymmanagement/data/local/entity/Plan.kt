@@ -7,7 +7,11 @@ import androidx.room.PrimaryKey
 data class Plan(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val remoteId: String = "",
     val name: String,
     val durationDays: Int,
-    val price: Double
+    val price: Double,
+    val updatedAt: Long = 0L,
+    val synced: Boolean = false,
+    val deleted: Boolean = false
 )

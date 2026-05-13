@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599187276340",
+    "project_id": "gymops-mad",
+    "storage_bucket": "gymops-mad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599187276340:android:cbfc60581d263e68d24061",
+        "android_client_info": {
+          "package_name": "com.example.gymmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSVB3AnTyI4LaJt9xdb3zBxzUbDLU7nIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

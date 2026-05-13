@@ -28,11 +28,15 @@ import androidx.room.PrimaryKey
 data class PaymentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val remoteId: String = "",
     val memberId: Int,
     val amount: Double,
     val paymentMethod: String,
     val paymentDate: Long,
     val planId: Int,
     val isRenewal: Boolean,
-    val status: String
+    val status: String,
+    val updatedAt: Long = 0L,
+    val synced: Boolean = false,
+    val deleted: Boolean = false
 )

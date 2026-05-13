@@ -21,9 +21,13 @@ import androidx.room.PrimaryKey
 data class MaintenanceEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val remoteId: String = "",
     val equipmentId: Int,
     val issueDescription: String,
     val reportedDate: Long,
     val resolvedDate: Long? = null,
-    val status: MaintenanceStatus
+    val status: MaintenanceStatus,
+    val updatedAt: Long = 0L,
+    val synced: Boolean = false,
+    val deleted: Boolean = false
 )

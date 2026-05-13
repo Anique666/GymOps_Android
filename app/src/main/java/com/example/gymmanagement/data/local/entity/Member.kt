@@ -21,6 +21,7 @@ import androidx.room.PrimaryKey
 data class Member(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val remoteId: String = "",
     val name: String,
     val phone: String,
     val joinDate: Long,
@@ -29,5 +30,8 @@ data class Member(
     val paymentStatus: Boolean,
     val gender: String = "UNSPECIFIED",
     val dateOfBirth: Long = 0L,
-    val source: String = "Unknown"
+    val source: String = "Unknown",
+    val updatedAt: Long = 0L,
+    val synced: Boolean = false,
+    val deleted: Boolean = false
 )
